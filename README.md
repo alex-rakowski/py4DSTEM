@@ -25,7 +25,7 @@ The tutorials, sample code, module, and function documentation all provide more 
 More information can also be found at [https://arxiv.org/abs/2003.09523](https://arxiv.org/abs/2003.09523).
 
 
-
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/weiji14/deepbedmap/]
 
 # Installation
 
