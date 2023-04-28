@@ -12,9 +12,69 @@
 </head>
 <body>
 
+    <canvas id="canvas"></canvas> 
+
+    <script>
+        
+        var canvas = document.getElementById('canvas')
+        var ctx = canvas.getContext('2d')
+        canvas.width = canvas.parentNode.offsetWidth
+        canvas.height = canvas.parentNode.offsetHeight
+      
+        let step = 0
+        const lines = 3
+      
+        function loop() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height)
+          step++
+          for (let i = 0; i < lines; i++) {
+            ctx.fillStyle = 'rgba(162, 247, 137, 0.3)'
+            var angle = (step + i * 180 / lines) * Math.PI / 180
+            var deltaHeight = Math.sin(angle) * 50
+            var deltaHeightRight = Math.cos(angle) * 50
+            ctx.beginPath()
+            ctx.moveTo(0, canvas.height / 2 + deltaHeight)
+            ctx.bezierCurveTo(canvas.width / 2, canvas.height / 2 + deltaHeight - 50, canvas.width / 2, canvas.height / 2 + deltaHeightRight - 50, canvas.width, canvas.height / 2 + deltaHeightRight)
+            ctx.lineTo(canvas.width, canvas.height)
+            ctx.lineTo(0, canvas.height)
+            ctx.lineTo(0, canvas.height / 2 + deltaHeight)
+            ctx.closePath()
+            ctx.fill()
+          }
+      
+          requestAnimationFrame(loop)
+        }
+      
+        loop()
+      
+      
+    </script>
 
 
-    <section class="card-list">
+
+
+    </section>
+
+    <section class="hidden hero">
+        <h1>HEADING</h1>
+        <p>Some text here and there asdpasd asd laksnd klmwelkqwe klqwe nklamd aklsmd laskdm aslkdm aslkd malkd</p>
+    </section>
+    <section class="hidden first">
+        <h2>hidden top</h2>
+        <p>some more text about buying something maybe or maybe not.</p>
+    </section>
+    
+
+    <section class="hidden features">
+        <div class="feature">
+            <img
+        </div>
+
+
+    </section>
+
+
+    <section class="hidden card-list">
         <article class="card">
             <header class="card-header">
                 <p>May 25th 2020</p>
