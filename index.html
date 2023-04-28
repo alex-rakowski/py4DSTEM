@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,10 +10,12 @@
     <!-- <link rel=”shortcut icon” href="./images/py4DSTEM_logo_vsmall.ico" type=”image/x-icon” /> -->
     <link rel="stylesheet" href="./site/style.css">
     <script defer src="./site/app.js"></script>
+
 </head>
+
 <body>
 
-    <canvas id="canvas"></canvas> 
+    <canvas id="canvas"></canvas>
 
     <script>
 
@@ -20,64 +23,125 @@
         var ctx = canvas.getContext('2d')
         canvas.width = canvas.parentNode.offsetWidth
         canvas.height = canvas.parentNode.offsetHeight
-      
+
         let step = 0
         const lines = 5
-        
+
         var gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
         gradient.addColorStop(0, 'rgba(255, 138, 0, 0.3)');
         gradient.addColorStop(0.5, 'rgba(229, 46, 113, 0.3)');
         gradient.addColorStop(1, 'rgba(46, 73, 229,0.3)'); // Add more color stops as needed
 
         function loop() {
-          ctx.clearRect(0, 0, canvas.width, canvas.height)
-          step++
-          for (let i = 0; i < lines; i++) {
-            ctx.fillStyle =  gradient // 'rgba(162, 247, 137, 0.3)'
-            var angle = (step + i * 180 / lines) * Math.PI / 180
-            var deltaHeight = Math.sin(angle) * 50
-            var deltaHeightRight = Math.cos(angle) * 50
-            ctx.beginPath()
-            ctx.moveTo(0, canvas.height / 2 + deltaHeight)
-            ctx.bezierCurveTo(canvas.width / 2, canvas.height / 2 + deltaHeight - 50, canvas.width / 2, canvas.height / 2 + deltaHeightRight - 50, canvas.width, canvas.height / 2 + deltaHeightRight)
-            ctx.lineTo(canvas.width, canvas.height)
-            ctx.lineTo(0, canvas.height)
-            ctx.lineTo(0, canvas.height / 2 + deltaHeight)
-            ctx.closePath()
-            ctx.fill()
-          }
-      
-          requestAnimationFrame(loop)
+
+            // Increment the step value
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
+            step++
+
+
+            for (let i = 0; i < lines; i++) {
+                ctx.fillStyle = gradient // 'rgba(162, 247, 137, 0.3)'
+                var angle = (step + i * 180 / lines) * Math.PI / 180
+                var deltaHeight = Math.sin(angle) * 50
+                var deltaHeightRight = Math.cos(angle) * 50
+                ctx.beginPath()
+                ctx.moveTo(0, canvas.height / 2 + deltaHeight)
+                ctx.bezierCurveTo(canvas.width / 2, canvas.height / 2 + deltaHeight - 50, canvas.width / 2, canvas.height / 2 + deltaHeightRight - 50, canvas.width, canvas.height / 2 + deltaHeightRight)
+                ctx.lineTo(canvas.width, canvas.height)
+                ctx.lineTo(0, canvas.height)
+                ctx.lineTo(0, canvas.height / 2 + deltaHeight)
+                ctx.closePath()
+                ctx.fill()
+            }
+
+            requestAnimationFrame(loop)
         }
-      
+
         loop()
-      
-      
+
+
     </script>
 
 
-
-
-    </section>
-
-    <section class="hidden hero">
-        <h1>HEADING</h1>
+    <section class="hidden">
+        <h1 class="hero" font-size="3em">py4DSTEM</h1>
         <p>Some text here and there asdpasd asd laksnd klmwelkqwe klqwe nklamd aklsmd laskdm aslkdm aslkd malkd</p>
+        <img class="hero"
+        src="./images/py4DSTEM_logo_54_export.png" 
+        />
     </section>
+    <div class="wave-spacer wave1"></div>
+
     <section class="hidden first">
         <h2>hidden top</h2>
         <p>some more text about buying something maybe or maybe not.</p>
+
     </section>
+    <div class="wave-spacer wave2"></div>
+    <div class="hero">
+        <img class="hero" src="./images/waveprop_test_04.gif" />
+    </div>
+    <div class="wave-spacer wave9"></div>
+
     
-
-    <section class="hidden features">
-        <div class="feature">
-            <img
+    <section class="hidden card-list">
+        <h1>Features</h1>
+        <div class="features">
+            <article class="card">
+                <header class="card-header">
+                    <h2><a href="./site/New_Test/new_index_test.html">Strain Mapping</a></h2>
+                    <p>Some paragrah text that isn't too long but still takes up room </p>
+                </header>
+                <img
+                src="https://api.dicebear.com/6.x/adventurer/svg?seed=Bailey"
+                alt="strain mapping" />
+            </article>
+            <div class="card">
+                <img
+                src="https://api.dicebear.com/6.x/adventurer/svg?seed=Bailey"
+                alt="avatar" />
+            </div>
+            <div class="card">
+                <img
+                src="https://api.dicebear.com/6.x/adventurer/svg?seed=Pumpkin"
+                alt="avatar" />
+            </div>
+            <div class="card">
+                <img
+                src="https://api.dicebear.com/6.x/adventurer/svg?seed=Bailey"
+                alt="avatar" />
+            </div>
+            <div class="card">
+                <img
+                src="https://api.dicebear.com/6.x/adventurer/svg?seed=Pumpkin"
+                alt="avatar" />
+            </div>
+            <div class="card">
+                <img
+                src="https://api.dicebear.com/6.x/adventurer/svg?seed=Bailey"
+                alt="avatar" />
+            </div>
+            <div class="card">
+                <img
+                src="https://api.dicebear.com/6.x/adventurer/svg?seed=Pumpkin"
+                alt="avatar" />
+            </div>
+            <div class="card">
+                <img
+                src="https://api.dicebear.com/6.x/adventurer/svg?seed=Bailey"
+                alt="avatar" />
+            </div>
+            <div class="card">
+                <img
+                src="https://api.dicebear.com/6.x/adventurer/svg?seed=Pumpkin"
+                alt="avatar" />
+            </div>
         </div>
-
-
     </section>
 
+    <div class="spacer layer1"></div>
+    <div class="spacer layer2"></div>
 
     <section class="hidden card-list">
         <article class="card">
@@ -86,20 +150,20 @@
                 <h2>4D-STEM</h2>
                 <p>Some paragrah text that isn't too long but still takes up room </p>
             </header>
-           
+
             <div class="card-author">
                 <a class="author-avatar" href="#">
-                    <img src="./images/py4DSTEM_logo.png" /> 
+                    <img src="./images/py4DSTEM_logo.png" />
                 </a>
                 <svg class="half-circle" viewBox="0 0 106 57">
                     <path d="M102 4c0 27.1-21.9 49-49 49S4 31.1 4 4"></path>
                 </svg>
-                
+
                 <div class="author-name">
                     <div class="author-name-prefix">Author</div>
                     Alex Rakowski
                 </div>
-            </div> 
+            </div>
             <div class="tags">
                 <a href="#">main</a>
                 <a href="#">dev</a>
@@ -149,8 +213,11 @@
                 <p>May 25th 2020</p>
                 <h2>I/O</h2>
             </header>
-            <div
-        </article>
+            <div </article>
     </section>
-</body>
+
+    <section class="hidden">
+        <iframe src="https://mybinder.org/v2/gh/py4dstem/py4DSTEM_tutorials/main?urlpath=lab/tree/notebooks/Index.ipynb" title="title"></iframe>
+    </section>
+    </body>
 </html>
