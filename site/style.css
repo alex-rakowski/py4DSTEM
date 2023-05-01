@@ -110,8 +110,26 @@ h1.hero {
     position: relative;
 }
 
+.card:after {
+
+    background: linear-gradient(180deg,transparent, #ff8a00, #e52e71 20%,  #2e49e5, transparent);
+    height: 70px;
+    width: 1px;
+    position: absolute;
+    left: 0rem;
+    padding: 0;
+    top:65%;
+    content: "";
+    transition: top 600ms ease, opacity 600ms;
+    opacity: 0;
+}
 .card:hover {
     transform: translateY(-1rem) scale(1.1);
+
+}
+.card:hover:after{
+    top: 25%;
+    opacity: 1;
 }
 .card:focus-within~.card, .card:hover~.card {
     transform: translateX(130px);
