@@ -281,6 +281,10 @@ class WholePatternFit:
                     opt.status,
                 ]
             # except LinAlgError as err:
+            except InterruptedError:
+                break
+            except KeyboardInterrupt:
+                break
             except:
                 warnings.warn(f'Fit on positon ({rx,ry}) failed with error')
 
