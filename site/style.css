@@ -108,8 +108,14 @@ h1.hero {
     scroll-snap-align: start;
     clear: both;
     position: relative;
+    overflow: hidden;
 }
 
+.card img{
+    max-height: fit-content;
+    height: auto;
+    overflow-x: hidden;
+}
 .card:after {
 
     background: linear-gradient(180deg,transparent, #ff8a00, #e52e71 20%,  #2e49e5, transparent);
