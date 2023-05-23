@@ -27,6 +27,7 @@ class WholePatternFit:
         mask: Optional[np.ndarray] = None,
         use_jacobian: bool = True,
         meanCBED: Optional[np.ndarray] = None,
+        medianCBED: Optional[np.ndarray] = None,
         fit_power: float = 1,
     ):
         """
@@ -70,6 +71,9 @@ class WholePatternFit:
         self.datacube = datacube
         self.meanCBED = (
             meanCBED if meanCBED is not None else np.mean(datacube.data, axis=(0, 1))
+        )
+        self.medianCBED = (
+            medianCBED if medianCBED is not None else np.median(datacube.data, axis=(0, 1))
         )
         # Global scaling parameter
         self.intensity_scale = 1/np.mean(self.meanCBED)
@@ -136,8 +140,6 @@ class WholePatternFit:
         # first make sure we have the latest parameters
         self._scrape_model_params()
 
-        # TODO Add a catch that calculates the mean CBED if not exists 
-        # set the current active pattern to the mean CBED:
         current_pattern = self.meanCBED * self.intensity_scale
         shared_data = self.static_data.copy()
 
@@ -203,6 +205,82 @@ class WholePatternFit:
         ax.text(0.25, 0.92, "Refined", transform=ax.transAxes, ha="center", va="center")
         ax.text(
             0.75, 0.92, "Mean CBED", transform=ax.transAxes, ha="center", va="center"
+        )
+
+        plt.show()
+
+        return opt
+
+
+    def fit_to_median_CBED(self, **fit_opts):
+        # first make sure we have the latest parameters
+        self._scrape_model_params()
+
+        current_pattern = self.medianCBED * self.intensity_scale
+        shared_data = self.static_data.copy()
+
+        self._fevals = []
+        self._xevals = []
+        self._cost_history = []
+
+        default_opts = {
+            "method": "trf",
+            "verbose": 1,
+        }
+        default_opts.update(fit_opts)
+
+        if self.hasJacobian & self.use_jacobian:
+            opt = least_squares(
+                self._pattern_error,
+                self.x0,
+                jac=self._jacobian,
+                bounds=(self.lower_bound, self.upper_bound),
+                args=(current_pattern, shared_data),
+                **default_opts,
+            )
+        else:
+            opt = least_squares(
+                self._pattern_error,
+                self.x0,
+                bounds=(self.lower_bound, self.upper_bound),
+                args=(current_pattern, shared_data),
+                **default_opts,
+            )
+
+        self.median_CBED_fit = opt
+
+        # Plotting
+        fig = plt.figure(constrained_layout=True, figsize=(12, 12))
+        gs = GridSpec(2, 2, figure=fig)
+
+        ax = fig.add_subplot(gs[0, 0])
+        err_hist = np.array(self._cost_history)
+        ax.plot(err_hist)
+        ax.set_ylabel("Sum Squared Error")
+        ax.set_xlabel("Iterations")
+        ax.set_yscale("log")
+
+        DP = self._pattern(self.median_CBED_fit.x, shared_data) / self.intensity_scale
+        ax = fig.add_subplot(gs[0, 1])
+        CyRd = mpl_c.LinearSegmentedColormap.from_list(
+            "CyRd", ["#00ccff", "#ffffff", "#ff0000"]
+        )
+        im = ax.matshow(
+            err_im := -(DP - self.medianCBED),
+            cmap=CyRd,
+            vmin=-np.abs(err_im).max() / 4,
+            vmax=np.abs(err_im).max() / 4,
+        )
+        # fig.colorbar(im)
+        ax.set_title("Error")
+        ax.axis("off")
+
+        ax = fig.add_subplot(gs[1, :])
+        ax.matshow(np.hstack((DP, self.medianCBED)) ** 0.25, cmap="turbo")
+        ax.axis("off")
+        ax.text(0.25, 0.92, "Refined", transform=ax.transAxes, ha="center", va="center")
+        ax.text(
+            0.75, 0.92, "Median CBED", transform=ax.transAxes, ha="center", va="center"
         )
 
         plt.show()
