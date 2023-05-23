@@ -135,6 +135,7 @@ class WholePatternFit:
         self._scrape_model_params()
         return self._pattern(self.x0, self.static_data.copy()) / self.intensity_scale
 
+    # TODO Refactor to fit_to_average_CBED and pass 'mean' or 'median' 
     def fit_to_mean_CBED(self, **fit_opts):
 
         # first make sure we have the latest parameters
@@ -398,6 +399,7 @@ class WholePatternFit:
 
         return self.fit_data, self.fit_metrics
 
+    # TODO refactor this to accept_average_CBED
     def accept_mean_CBED_fit(self):
         x = self.mean_CBED_fit.x
         self.static_data["global_x0"] = x[0]
