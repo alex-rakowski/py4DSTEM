@@ -136,6 +136,7 @@ class WholePatternFit:
         # first make sure we have the latest parameters
         self._scrape_model_params()
 
+        # TODO Add a catch that calculates the mean CBED if not exists 
         # set the current active pattern to the mean CBED:
         current_pattern = self.meanCBED * self.intensity_scale
         shared_data = self.static_data.copy()
@@ -246,6 +247,8 @@ class WholePatternFit:
         fit_metrics = np.zeros((self.datacube.R_Nx, self.datacube.R_Ny, 4))
 
         for rx, ry in tqdmnd(self.datacube.R_Nx, self.datacube.R_Ny):
+
+
             current_pattern = self.datacube.data[rx, ry, :, :] * self.intensity_scale
             shared_data = self.static_data.copy()
             self._cost_history = (
@@ -256,7 +259,7 @@ class WholePatternFit:
                 x0 = self.fit_data.data[rx, ry] if resume else self.x0
 
                 if self.hasJacobian & self.use_jacobian:
-                    opt = least_squares(
+                    opt =  least_squares(
                         self._pattern_error,
                         x0,
                         jac=self._jacobian,
@@ -287,7 +290,7 @@ class WholePatternFit:
                 break
             except:
                 warnings.warn(f'Fit on positon ({rx,ry}) failed with error')
-
+                # TODO This didn't raise the error like I'd have throught, it says 'rx,ry' for all probes 
 
         # Convert to RealSlices
         model_names = []
