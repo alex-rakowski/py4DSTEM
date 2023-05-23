@@ -10,6 +10,9 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as mpl_c
 from matplotlib.gridspec import GridSpec
 import warnings
+from dask import delayed
+from dask.distributed import Client, progress
+
 
 class WholePatternFit:
 
@@ -371,6 +374,140 @@ class WholePatternFit:
                 warnings.warn(f'Fit on positon ({rx,ry}) failed with error')
                 # TODO This didn't raise the error like I'd have throught, it says 'rx,ry' for all probes 
 
+        # Convert to RealSlices
+        model_names = []
+        for m in self.model:
+            n = m.name
+            if n in model_names:
+                i = 1
+                while n in model_names:
+                    n = m.name + "_" + str(i)
+                    i += 1
+            model_names.append(n)
+
+        param_names = ["global_x0", "global_y0"] + [
+            n + "/" + k
+            for m, n in zip(self.model, model_names)
+            for k in m.params.keys()
+        ]
+
+        self.fit_data = RealSlice(fit_data, name="Fit Data", slicelabels=param_names)
+        self.fit_metrics = RealSlice(
+            fit_metrics,
+            name="Fit Metrics",
+            slicelabels=["cost", "optimality", "nfev", "status"],
+        )
+
+        self.show_fit_metrics()
+
+        return self.fit_data, self.fit_metrics
+
+
+
+    def fit_all_patterns_dask(
+        self, 
+        client = None,
+        resume = False, 
+        **fit_opts
+        ):
+        """
+        Apply model fitting to all patterns.
+
+        Parameters
+        ----------
+        resume: bool (optional)
+            Set to true to continue a previous fit with more iterations.
+        fit_opts: args (optional)
+            args passed to scipy.optimize.least_squares
+
+        Returns
+        --------
+        fit_data: RealSlice
+            Fitted coefficients for all probe positions
+        fit_metrics: RealSlice
+            Fitting metrixs for all probe positions
+
+        """
+
+        # make sure we have the latest parameters
+        self._scrape_model_params()
+
+        # set tracking off
+        self._track = False
+        self._fevals = []
+
+        if resume:
+            assert hasattr(self, "fit_data"), "No existing data resuming fit!"
+        if client is None:
+            client = Client()
+        fit_data = np.zeros((self.datacube.R_Nx, self.datacube.R_Ny, self.x0.shape[0]))
+        fit_metrics = np.zeros((self.datacube.R_Nx, self.datacube.R_Ny, 4))
+
+        # create a list of jobs 
+        jobs = []
+        for rx, ry in np.ndindex(self.datacube.Rshape):
+
+            current_pattern = self.datacube.data[rx, ry, :, :] * self.intensity_scale
+            shared_data = self.static_data.copy()
+            self._cost_history = (
+                []
+            )  # clear this so it doesn't grow: TODO make this not stupid
+
+            # TODO This try structure is no longer correct 
+            try:
+                x0 = self.fit_data.data[rx, ry] if resume else self.x0
+
+                if self.hasJacobian & self.use_jacobian:
+                    opt =  delayed(least_squares)(
+                        self._pattern_error,
+                        x0,
+                        jac=self._jacobian,
+                        bounds=(self.lower_bound, self.upper_bound),
+                        args=(current_pattern, shared_data),
+                        **fit_opts,
+                    )
+                else:
+                    opt = delayed(least_squares)(
+                        self._pattern_error,
+                        x0,
+                        bounds=(self.lower_bound, self.upper_bound),
+                        args=(current_pattern, shared_data),
+                        **fit_opts,
+                    )
+                
+                jobs.append(opt)
+
+
+
+
+         
+            # except LinAlgError as err:
+            except InterruptedError:
+                break
+            except KeyboardInterrupt:
+                break
+            except:
+                warnings.warn(f'Fit on positon ({rx,ry}) failed with error')
+                # TODO This didn't raise the error like I'd have throught, it says 'rx,ry' for all probes 
+        
+
+        # do the computation 
+        results = client.compute(jobs)
+        # progress(results, notebook=True) # this isn't working 
+        # gather the results
+        results = client.gather(results)
+        
+
+        # add the results to the according probe position
+        for index, (rx, ry) in enumerate(np.ndindex(self.datacube.Rshape)):
+
+                fit_data[rx, ry, :] = results[index].x
+                fit_metrics[rx, ry, :] = [
+                    results[index].cost,
+                    results[index].optimality,
+                    results[index].nfev,
+                    results[index].status,
+                ]
         # Convert to RealSlices
         model_names = []
         for m in self.model:
