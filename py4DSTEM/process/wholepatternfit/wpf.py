@@ -412,6 +412,20 @@ class WholePatternFit:
             for j, k in enumerate(m.params.keys()):
                 m.params[k].initial_value = x[ind + j]
 
+    def accept_median_CBED_fit(self):
+        x = self.median_CBED_fit.x
+        self.static_data["global_x0"] = x[0]
+        self.static_data["global_y0"] = x[1]
+
+        self.static_data["global_r"] = np.hypot(
+            (self.static_data["xArray"] - x[0]), (self.static_data["yArray"] - x[1])
+        )
+
+        for i, m in enumerate(self.model):
+            ind = self.model_param_inds[i] + 2
+            for j, k in enumerate(m.params.keys()):
+                m.params[k].initial_value = x[ind + j]
+
     def get_lattice_maps(self):
         assert hasattr(self, "fit_data"), "Please run fitting first!"
 
