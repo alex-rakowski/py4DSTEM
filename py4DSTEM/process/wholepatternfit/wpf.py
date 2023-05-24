@@ -12,6 +12,7 @@ from matplotlib.gridspec import GridSpec
 import warnings
 from dask import delayed
 from dask.distributed import Client, progress
+from copy import deepcopy
 
 
 class WholePatternFit:
@@ -447,8 +448,8 @@ class WholePatternFit:
         jobs = []
         for rx, ry in np.ndindex(self.datacube.Rshape):
 
-            current_pattern = self.datacube.data[rx, ry, :, :] * self.intensity_scale
-            shared_data = self.static_data.copy()
+            current_pattern = delayed(deepcopy)(self.datacube.data[rx, ry, :, :] * self.intensity_scale)
+            shared_data = delayed(deepcopy)(self.static_data.copy())
             self._cost_history = (
                 []
             )  # clear this so it doesn't grow: TODO make this not stupid
@@ -492,7 +493,7 @@ class WholePatternFit:
         
 
         # do the computation 
-        results = client.compute(jobs)
+        results = client.compute(jobs, optimize_graph=False)
         # progress(results, notebook=True) # this isn't working 
         # gather the results
         results = client.gather(results)
