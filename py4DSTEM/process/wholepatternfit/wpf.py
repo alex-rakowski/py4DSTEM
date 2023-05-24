@@ -15,6 +15,7 @@ from dask.distributed import Client, progress
 from copy import deepcopy
 from tlz import partition_all
 from itertools import chain
+import dask.array as da
 
 
 class WholePatternFit:
@@ -446,11 +447,14 @@ class WholePatternFit:
         fit_data = np.zeros((self.datacube.R_Nx, self.datacube.R_Ny, self.x0.shape[0]))
         fit_metrics = np.zeros((self.datacube.R_Nx, self.datacube.R_Ny, 4))
 
+        # create a dask object of the datacube 
+        self.datacube_dask = da.from_array(self.datacube.data, chunks= (1,1, *self.datacube.Qshape))
+
         # create a list of jobs 
         jobs = []
         for rx, ry in np.ndindex(self.datacube.Rshape):
 
-            current_pattern = delayed(deepcopy)(self.datacube.data[rx, ry, :, :]) * self.intensity_scale
+            current_pattern = self.datacube.data[rx, ry, :, :] * self.intensity_scale
             shared_data = delayed(deepcopy)(self.static_data)
             self._cost_history = (
                 []
