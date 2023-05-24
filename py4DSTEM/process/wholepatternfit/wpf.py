@@ -13,6 +13,8 @@ import warnings
 from dask import delayed
 from dask.distributed import Client, progress
 from copy import deepcopy
+from tlz import partition_all
+from itertools import chain
 
 
 class WholePatternFit:
@@ -491,13 +493,22 @@ class WholePatternFit:
                 warnings.warn(f'Fit on positon ({rx,ry}) failed with error')
                 # TODO This didn't raise the error like I'd have throught, it says 'rx,ry' for all probes 
         
+        # chunk up the jobs
 
+        jobs = partition_all(100, jobs)
         # do the computation 
         results = client.compute(jobs, optimize_graph=False)
         # progress(results, notebook=True) # this isn't working 
         # gather the results
         results = client.gather(results)
+        # flattern the nested list
+        results = list(chain(*results))
         
+        # print(type(results))
+        # print(len(results))
+        # print(type(results[0]))
+        # print(len(results[0]))
+    
 
         # add the results to the according probe position
         for index, (rx, ry) in enumerate(np.ndindex(self.datacube.Rshape)):
