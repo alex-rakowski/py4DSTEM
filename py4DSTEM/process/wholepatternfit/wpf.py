@@ -454,7 +454,7 @@ class WholePatternFit:
         jobs = []
         for rx, ry in np.ndindex(self.datacube.Rshape):
 
-            current_pattern = self.datacube_dask[rx, ry, :, :] * self.intensity_scale
+            current_pattern = self.datacube.data[rx, ry, :, :] * self.intensity_scale
             shared_data = delayed(deepcopy)(self.static_data)
             self._cost_history = (
                 []
@@ -482,7 +482,10 @@ class WholePatternFit:
                         **fit_opts,
                     )
                 
-                jobs.append(opt)
+                future = client.submit(lambda x: x.compute(), opt)  # Submit each job individually
+                jobs.append(future)
+
+                # jobs.append(opt)
 
 
 
@@ -499,14 +502,14 @@ class WholePatternFit:
         
         # chunk up the jobs
 
-        jobs = partition_all(100, jobs)
-        # do the computation 
-        results = client.compute(jobs, optimize_graph=False)
+        # jobs = partition_all(10, jobs)
+        # # do the computation 
+        # results = client.compute(jobs, optimize_graph=True, )
         # progress(results, notebook=True) # this isn't working 
         # gather the results
-        results = client.gather(results)
+        results = client.gather(jobs)
         # flattern the nested list
-        results = list(chain(*results))
+        # results = list(chain(*results))
         
         # print(type(results))
         # print(len(results))
