@@ -454,7 +454,7 @@ class WholePatternFit:
         jobs = []
         for rx, ry in np.ndindex(self.datacube.Rshape):
 
-            current_pattern = self.datacube.data[rx, ry, :, :] * self.intensity_scale
+            current_pattern = self.datacube_dask[rx, ry, :, :] * self.intensity_scale
             shared_data = delayed(deepcopy)(self.static_data)
             self._cost_history = (
                 []
