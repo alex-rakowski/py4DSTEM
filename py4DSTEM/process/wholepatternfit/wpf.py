@@ -16,6 +16,7 @@ from copy import deepcopy
 from tlz import partition_all
 from itertools import chain
 import dask.array as da
+import inspect
 
 
 class WholePatternFit:
@@ -406,8 +407,6 @@ class WholePatternFit:
 
         return self.fit_data, self.fit_metrics
 
-
-
     def fit_all_patterns_dask(
         self, 
         client = None,
@@ -450,64 +449,55 @@ class WholePatternFit:
         # create a dask object of the datacube 
         self.datacube_dask = da.from_array(self.datacube.data, chunks= (1,1, *self.datacube.Qshape))
 
+        
         # create a list of jobs 
         jobs = []
+
         for rx, ry in np.ndindex(self.datacube.Rshape):
 
             current_pattern = self.datacube.data[rx, ry, :, :] * self.intensity_scale
-            shared_data = delayed(deepcopy)(self.static_data)
+            shared_data = deepcopy(self.static_data)
             self._cost_history = (
                 []
             )  # clear this so it doesn't grow: TODO make this not stupid
+            
+            x0 = self.fit_data.data[rx, ry] if resume else self.x0
 
-            # TODO This try structure is no longer correct 
-            try:
-                x0 = self.fit_data.data[rx, ry] if resume else self.x0
+            if self.hasJacobian & self.use_jacobian:
+                temp = {
+                    "fun" : self._pattern_error,
+                    "x0" : x0,
+                    "jac" : self._jacobian,
+                    "bounds" : (self.lower_bound, self.upper_bound),
+                    "args" : (current_pattern, shared_data),
+                    **fit_opts
+                }
+            else: 
+                temp = {
+                    "fun" : self._pattern_error,
+                    "x0" : x0,
+                    "bounds" : (self.lower_bound, self.upper_bound),
+                    "args" : (current_pattern, shared_data),
+                    **fit_opts
+                }
 
-                if self.hasJacobian & self.use_jacobian:
-                    opt =  delayed(least_squares)(
-                        self._pattern_error,
-                        x0,
-                        jac=self._jacobian,
-                        bounds=(self.lower_bound, self.upper_bound),
-                        args=(current_pattern, shared_data),
-                        **fit_opts,
-                    )
-                else:
-                    opt = delayed(least_squares)(
-                        self._pattern_error,
-                        x0,
-                        bounds=(self.lower_bound, self.upper_bound),
-                        args=(current_pattern, shared_data),
-                        **fit_opts,
-                    )
-                
-                future = client.submit(lambda x: x.compute(), opt)  # Submit each job individually
-                jobs.append(future)
+            jobs.append(temp)
 
-                # jobs.append(opt)
-
-
-
-
-         
-            # except LinAlgError as err:
-            except InterruptedError:
-                break
-            except KeyboardInterrupt:
-                break
-            except:
-                warnings.warn(f'Fit on positon ({rx,ry}) failed with error')
-                # TODO This didn't raise the error like I'd have throught, it says 'rx,ry' for all probes 
         
+        # split the dict_args into separate lists
+        mega_args = [
+            [kwargs.get(key, val.default) for kwargs in jobs]
+        
+        for key, val in inspect.signature(least_squares).parameters.items()
+        ] 
         # chunk up the jobs
-
         # jobs = partition_all(10, jobs)
-        # # do the computation 
-        # results = client.compute(jobs, optimize_graph=True, )
+        # do the computation 
+        # print(mega_args[0])
+        results = client.map(least_squares, *mega_args)
         # progress(results, notebook=True) # this isn't working 
         # gather the results
-        results = client.gather(jobs)
+        results = client.gather(results)
         # flattern the nested list
         # results = list(chain(*results))
         
@@ -516,7 +506,7 @@ class WholePatternFit:
         # print(type(results[0]))
         # print(len(results[0]))
     
-
+        
         # add the results to the according probe position
         for index, (rx, ry) in enumerate(np.ndindex(self.datacube.Rshape)):
 
