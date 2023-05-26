@@ -503,19 +503,19 @@ class WholePatternFit:
         ]
 
         # chunk up the jobs
-        mega_args = partition_all(100, jobs)
+        # mega_args = partition_all(100, jobs)
         # do the computation 
         # print(mega_args[0])
 
         print("MAPPING JOBS")
-
-        results = client.map(least_squares, *mega_args)
+        client.ma
+        results = client.map(least_squares, *mega_args, batch_size=100)
         # progress(results, notebook=True) # this isn't working 
         # gather the results
         print("GATHERING JOBS")
         results = client.gather(results)
         # flattern the nested list
-        results = list(chain(*results))
+        # results = list(chain(*results))
         
         # print(type(results))
         # print(len(results))
