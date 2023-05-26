@@ -14,9 +14,10 @@ from dask import delayed
 from dask.distributed import Client, progress
 from copy import deepcopy
 from tlz import partition_all
-from itertools import chain
 import dask.array as da
 import inspect
+from itertools import chain
+from functools import reduce
 
 
 class WholePatternFit:
@@ -453,9 +454,10 @@ class WholePatternFit:
         # create a list of jobs 
         jobs = []
 
+        print("FIRST LOOP OVER THE DATA TO PREPARE JOBS")
         for rx, ry in np.ndindex(self.datacube.Rshape):
 
-            current_pattern = self.datacube.data[rx, ry, :, :] * self.intensity_scale
+            current_pattern = delayed(deepcopy)(self.datacube.data[rx, ry, :, :]) * self.intensity_scale
             shared_data = deepcopy(self.static_data)
             self._cost_history = (
                 []
@@ -483,30 +485,44 @@ class WholePatternFit:
 
             jobs.append(temp)
 
-        
+        print("CREATING THE ARGS LISTS")
         # split the dict_args into separate lists
-        mega_args = [
-            [kwargs.get(key, val.default) for kwargs in jobs]
+        # mega_args = [
+        #     [kwargs.get(key, val.default) for kwargs in jobs]
         
-        for key, val in inspect.signature(least_squares).parameters.items()
-        ] 
+        # for key, val in inspect.signature(least_squares).parameters.items()
+        # ] 
+
+
+        parameters = inspect.signature(least_squares).parameters
+        mega_args = [
+            list(map(lambda kwargs: kwargs.get(key, val.default), jobs))
+            if val.default is not inspect.Parameter.empty
+            else list(map(lambda kwargs: kwargs.get(key), jobs))
+            for key, val in parameters.items()
+        ]
+
         # chunk up the jobs
-        # jobs = partition_all(10, jobs)
+        mega_args = partition_all(100, jobs)
         # do the computation 
         # print(mega_args[0])
+
+        print("MAPPING JOBS")
+
         results = client.map(least_squares, *mega_args)
         # progress(results, notebook=True) # this isn't working 
         # gather the results
+        print("GATHERING JOBS")
         results = client.gather(results)
         # flattern the nested list
-        # results = list(chain(*results))
+        results = list(chain(*results))
         
         # print(type(results))
         # print(len(results))
         # print(type(results[0]))
         # print(len(results[0]))
     
-        
+        print('ADDING JOBS TO FIT DATA AND FIT METRICS')
         # add the results to the according probe position
         for index, (rx, ry) in enumerate(np.ndindex(self.datacube.Rshape)):
 
