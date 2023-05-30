@@ -492,7 +492,7 @@ class WholePatternFit:
         
         # for key, val in inspect.signature(least_squares).parameters.items()
         # ] 
-
+        
 
         parameters = inspect.signature(least_squares).parameters
         mega_args = [
@@ -508,7 +508,7 @@ class WholePatternFit:
         # print(mega_args[0])
 
         print("MAPPING JOBS")
-        client.ma
+        
         results = client.map(least_squares, *mega_args, batch_size=100)
         # progress(results, notebook=True) # this isn't working 
         # gather the results
