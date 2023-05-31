@@ -407,6 +407,15 @@ class WholePatternFit:
 
         return self.fit_data, self.fit_metrics
 
+    def _least_squares_wrapper_func(rx:int, ry:int, *args, **kwargs):
+
+        """ 
+        Placeholder
+        """
+
+        func = delayed(least_squares)(*args, **kwargs)
+
+        return ((rx, ry), func)
 
 
     def fit_all_patterns_dask(
@@ -459,7 +468,7 @@ class WholePatternFit:
         jobs = []
         for rx, ry in np.ndindex(self.datacube.Rshape):
 
-            current_pattern = self.datacube_dask[rx, ry, :, :] * self.intensity_scale
+            current_pattern = delayed(deepcopy)(self.datacube[rx, ry, :, :])* self.intensity_scale
             # current_pattern = remote_datacube_dask[rx, ry, :, :] * self.intensity_scale
             
             shared_data = delayed(deepcopy)(self.static_data)
