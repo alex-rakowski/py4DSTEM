@@ -504,6 +504,8 @@ class WholePatternFit:
         jobs = partition_all(100, jobs)
         # do the computation 
         results = client.compute(jobs, optimize_graph=True)
+
+        self._dask_results = results
         # progress(results, notebook=True) # this isn't working 
         # gather the results
         results = client.gather(results)
