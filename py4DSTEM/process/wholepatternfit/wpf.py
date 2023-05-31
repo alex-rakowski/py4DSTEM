@@ -451,8 +451,8 @@ class WholePatternFit:
         self.datacube_dask = da.from_array(self.datacube.data, chunks= (1,1, *self.datacube.Qshape))
         
         # try scattering datacube to workers
-        client.scatter(self.datacube)
-        client.scatter(self.datacube_dask)
+        # client.scatter(self.datacube)
+        # client.scatter(self.datacube_dask)
         # create a list of jobs 
         jobs = []
         for rx, ry in np.ndindex(self.datacube.Rshape):
@@ -506,12 +506,12 @@ class WholePatternFit:
 
         jobs = partition_all(100, jobs)
         # do the computation 
-        results = client.compute(jobs, optimize_graph=True)
+        results = client.compute(jobs, optimize_graph=True, sync=True)
 
         self._dask_results = results
         # progress(results, notebook=True) # this isn't working 
         # gather the results
-        results = client.gather(results)
+        # results = client.gather(results)
         # flattern the nested list
         results = list(chain(*results))
         
