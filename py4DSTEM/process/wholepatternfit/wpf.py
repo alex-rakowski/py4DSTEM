@@ -468,47 +468,47 @@ class WholePatternFit:
             )  # clear this so it doesn't grow: TODO make this not stupid
 
             # TODO This try structure is no longer correct 
-            # try:
-            x0 = self.fit_data.data[rx, ry] if resume else self.x0
+            try:
+                x0 = self.fit_data.data[rx, ry] if resume else self.x0
 
-            if self.hasJacobian & self.use_jacobian:
-                opt =  delayed(least_squares)(
-                    self._pattern_error,
-                    x0,
-                    jac=self._jacobian,
-                    bounds=(self.lower_bound, self.upper_bound),
-                    args=(current_pattern, shared_data),
-                    **fit_opts,
-                )
-            else:
-                opt = delayed(least_squares)(
-                    self._pattern_error,
-                    x0,
-                    bounds=(self.lower_bound, self.upper_bound),
-                    args=(current_pattern, shared_data),
-                    **fit_opts,
-                )
-            
-            jobs.append(opt)
+                if self.hasJacobian & self.use_jacobian:
+                    opt =  delayed(least_squares)(
+                        self._pattern_error,
+                        x0,
+                        jac=self._jacobian,
+                        bounds=(self.lower_bound, self.upper_bound),
+                        args=(current_pattern, shared_data),
+                        **fit_opts,
+                    )
+                else:
+                    opt = delayed(least_squares)(
+                        self._pattern_error,
+                        x0,
+                        bounds=(self.lower_bound, self.upper_bound),
+                        args=(current_pattern, shared_data),
+                        **fit_opts,
+                    )
+                
+                jobs.append(opt)
 
 
 
 
          
-            # # except LinAlgError as err:
-            # except InterruptedError:
-            #     break
-            # except KeyboardInterrupt:
-            #     break
-            # except:
-            #     warnings.warn(f'Fit on positon ({rx,ry}) failed with error')
-            #     # TODO This didn't raise the error like I'd have throught, it says 'rx,ry' for all probes 
+            # except LinAlgError as err:
+            except InterruptedError:
+                break
+            except KeyboardInterrupt:
+                break
+            except:
+                warnings.warn(f'Fit on positon ({rx,ry}) failed with error')
+                # TODO This didn't raise the error like I'd have throught, it says 'rx,ry' for all probes 
         
 
         self._dask_jobs = jobs
         # chunk up the jobs
 
-        # jobs = partition_all(100, jobs)
+        jobs = partition_all(100, jobs)
         # do the computation 
         results = client.compute(jobs, optimize_graph=True )
 
@@ -518,7 +518,7 @@ class WholePatternFit:
         results = client.gather(results)
         self._dask_gathered = results
         # flattern the nested list
-        # results = list(chain(*results))
+        results = list(chain(*results))
 
         self._dask_gathered_chained = results
         
