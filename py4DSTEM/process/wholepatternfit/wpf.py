@@ -497,6 +497,8 @@ class WholePatternFit:
                 warnings.warn(f'Fit on positon ({rx,ry}) failed with error')
                 # TODO This didn't raise the error like I'd have throught, it says 'rx,ry' for all probes 
         
+
+        self._dask_jobs = jobs
         # chunk up the jobs
 
         jobs = partition_all(100, jobs)
