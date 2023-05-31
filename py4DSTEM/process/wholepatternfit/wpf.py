@@ -508,19 +508,19 @@ class WholePatternFit:
         self._dask_jobs = jobs
         # chunk up the jobs
 
-        jobs = partition_all(100, jobs)
+        jobs = partition_all(20, jobs)
         # do the computation 
         results = client.compute(jobs, optimize_graph=True )
 
-        self._dask_results = results
+        # self._dask_results = results
         # progress(results, notebook=True) # this isn't working 
         # gather the results
         results = client.gather(results)
-        self._dask_gathered = results
+        # self._dask_gathered = results
         # flattern the nested list
         results = list(chain(*results))
 
-        self._dask_gathered_chained = results
+        # self._dask_gathered_chained = results
         
         # print(type(results))
         # print(len(results))
