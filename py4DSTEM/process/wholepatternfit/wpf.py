@@ -16,7 +16,7 @@ from copy import deepcopy
 from tlz import partition_all
 from itertools import chain
 import dask.array as da
-
+import dask.distributed as dd
 
 class WholePatternFit:
 
@@ -452,13 +452,14 @@ class WholePatternFit:
         
         # try scattering datacube to workers
         # client.scatter(self.datacube)
-        # remote_datacube_dask = client.scatter(self.datacube_dask)
+        # remote_datacube_dask = dd.wait(client.scatter(self.datacube_dask))
+        remote_datacube_dask = [i for i in  dd.wait(client.scatter(self.datacube_dask)).done][0].result()
         # create a list of jobs 
         jobs = []
         for rx, ry in np.ndindex(self.datacube.Rshape):
 
-            current_pattern = self.datacube_dask[rx, ry, :, :] * self.intensity_scale
-            # current_pattern = remote_datacube_dask[rx, ry, :, :] * self.intensity_scale
+            # current_pattern = self.datacube_dask[rx, ry, :, :] * self.intensity_scale
+            current_pattern = remote_datacube_dask[rx, ry, :, :] * self.intensity_scale
             
             shared_data = delayed(deepcopy)(self.static_data)
             self._cost_history = (
@@ -508,12 +509,12 @@ class WholePatternFit:
 
         jobs = partition_all(100, jobs)
         # do the computation 
-        results = client.compute(jobs, optimize_graph=True, sync=True)
+        results = client.compute(jobs, optimize_graph=True, )
 
         self._dask_results = results
         # progress(results, notebook=True) # this isn't working 
         # gather the results
-        # results = client.gather(results)
+        results = client.gather(results)
         # flattern the nested list
         results = list(chain(*results))
         
