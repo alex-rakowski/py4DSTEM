@@ -468,12 +468,12 @@ class WholePatternFit:
         jobs = []
 
 
-        shared_data = deepcopy(self.static_data)
-        pattern_error = deepcopy(self._pattern_error)
+        shared_data = self.static_data
+        pattern_error = self._pattern_error
         if self.hasJacobian & self.use_jacobian:
-            jacobian = deepcopy(self._jacobian)
-        lower_bound = deepcopy(self.lower_bound)
-        upper_bound = deepcopy(self.upper_bound)
+            jacobian = self._jacobian
+        lower_bound = self.lower_bound
+        upper_bound = self.upper_bound
 
 
         for rx, ry in np.ndindex(self.datacube.Rshape):
