@@ -452,12 +452,14 @@ class WholePatternFit:
         
         # try scattering datacube to workers
         # client.scatter(self.datacube)
-        # client.scatter(self.datacube_dask)
+        remote_datacube_dask = client.scatter(self.datacube_dask)
         # create a list of jobs 
         jobs = []
         for rx, ry in np.ndindex(self.datacube.Rshape):
 
-            current_pattern = self.datacube_dask[rx, ry, :, :] * self.intensity_scale
+            # current_pattern = self.datacube_dask[rx, ry, :, :] * self.intensity_scale
+            current_pattern = remote_datacube_dask[rx, ry, :, :] * self.intensity_scale
+            
             shared_data = delayed(deepcopy)(self.static_data)
             self._cost_history = (
                 []
