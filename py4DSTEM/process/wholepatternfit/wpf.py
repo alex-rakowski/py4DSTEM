@@ -17,6 +17,7 @@ from tlz import partition_all
 from itertools import chain
 import dask.array as da
 import dask.distributed as dd
+import dask
 
 class WholePatternFit:
 
@@ -509,7 +510,7 @@ class WholePatternFit:
 
         jobs = partition_all(100, jobs)
         # do the computation 
-        results = dd.wait(client.compute(jobs, optimize_graph=True, ))
+        results = dask.compute(jobs, optimize_graph=True, )
 
         # self._dask_results = results
         # progress(results, notebook=True) # this isn't working 
