@@ -466,6 +466,8 @@ class WholePatternFit:
         # remote_datacube_dask = [i for i in  dd.wait(client.scatter(self.datacube_dask)).done][0].result()
         # create a list of jobs 
         jobs = []
+
+
         for rx, ry in np.ndindex(self.datacube.Rshape):
 
             current_pattern = delayed(deepcopy)(self.datacube[rx, ry, :, :])* self.intensity_scale
@@ -485,7 +487,7 @@ class WholePatternFit:
                         delayed(deepcopy)(self._pattern_error),
                         x0,
                         jac=delayed(deepcopy)(self._jacobian),
-                        bounds=(delayed(deeocopy)(self.lower_bound), delayed(deepcopy)(self.upper_bound)),
+                        bounds=(delayed(deepcopy)(self.lower_bound), delayed(deepcopy)(self.upper_bound)),
                         args=(current_pattern, shared_data),
                         **fit_opts,
                     )
