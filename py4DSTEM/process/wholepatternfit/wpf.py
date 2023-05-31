@@ -516,8 +516,11 @@ class WholePatternFit:
         # progress(results, notebook=True) # this isn't working 
         # gather the results
         results = client.gather(results)
+        self._dask_gathered = results
         # flattern the nested list
         results = list(chain(*results))
+
+        self._dask_gathered_chained = results
         
         # print(type(results))
         # print(len(results))
