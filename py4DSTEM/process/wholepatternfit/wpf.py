@@ -482,18 +482,18 @@ class WholePatternFit:
 
                 if self.hasJacobian & self.use_jacobian:
                     opt =  delayed(least_squares)(
-                        self._pattern_error,
+                        delayed(deepcopy)(self._pattern_error),
                         x0,
-                        jac=self._jacobian,
-                        bounds=(self.lower_bound, self.upper_bound),
+                        jac=delayed(deepcopy)(self._jacobian),
+                        bounds=(delayed(deeocopy)(self.lower_bound), delayed(deepcopy)(self.upper_bound)),
                         args=(current_pattern, shared_data),
                         **fit_opts,
                     )
                 else:
                     opt = delayed(least_squares)(
-                        self._pattern_error,
+                        delayed(deepcopy)(self._pattern_error),
                         x0,
-                        bounds=(self.lower_bound, self.upper_bound),
+                        bounds=(delayed(deepcopy)(self.lower_bound), delayed(deepcopy)(self.upper_bound)),
                         args=(current_pattern, shared_data),
                         **fit_opts,
                     )
