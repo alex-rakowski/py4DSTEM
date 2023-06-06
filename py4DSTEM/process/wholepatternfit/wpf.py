@@ -295,7 +295,8 @@ class WholePatternFit:
         plt.show()
 
         return opt
-
+    
+    
     def fit_all_patterns(
         self, 
         resume = False, 
@@ -335,7 +336,7 @@ class WholePatternFit:
 
         for rx, ry in tqdmnd(self.datacube.R_Nx, self.datacube.R_Ny):
 
-
+            
             current_pattern = self.datacube.data[rx, ry, :, :] * self.intensity_scale
             shared_data = self.static_data.copy()
             self._cost_history = (
@@ -479,6 +480,7 @@ class WholePatternFit:
         for rx, ry in np.ndindex(self.datacube.Rshape):
 
             current_pattern = self.datacube_dask[rx, ry, :, :] * self.intensity_scale
+            current_pattern = self.datacube.data[rx, ry, :, :] * self.intensity_scale
             # current_pattern = remote_datacube_dask[rx, ry, :, :] * self.intensity_scale
             
             
@@ -529,6 +531,18 @@ class WholePatternFit:
 
         jobs = partition_all(20, jobs)
         # do the computation 
+
+
+        from dask.diagnostics import Profiler, ResourceProfiler, CacheProfiler
+        from cachey import nbytes
+        # with Profiler() as prof, ResourceProfiler(dt=0.25) as rprof, CacheProfiler(metric=nbytes) as cprof:
+        prof = Profiler()
+        prof.register()
+        rprof = ResourceProfiler(dt=0.25)
+        rprof.register()
+        cprof = CacheProfiler(metric=nbytes)
+        cprof.register()
+        
         results = client.compute(jobs, optimize_graph=True )
 
         # self._dask_results = results
@@ -583,7 +597,7 @@ class WholePatternFit:
 
         self.show_fit_metrics()
 
-        return self.fit_data, self.fit_metrics
+        return self.fit_data, self.fit_metrics, (prof, rprof, cprof)
 
     # TODO refactor this to accept_average_CBED
     def accept_mean_CBED_fit(self):
