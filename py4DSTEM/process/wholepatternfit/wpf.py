@@ -590,7 +590,7 @@ class WholePatternFit:
         from cachey import nbytes
         # with Profiler() as prof, ResourceProfiler(dt=0.25) as rprof, CacheProfiler(metric=nbytes) as cprof:
 
-
+        from dask.distributed import progress
         with performance_report(filename="dask-report.html"), get_task_stream(plot='save', filename="task-stream.html") as ts:
     
         # prof = Profiler()
@@ -600,7 +600,8 @@ class WholePatternFit:
         # cprof = CacheProfiler(metric=nbytes)
         # cprof.register()
             results = client.compute(jobs, optimize_graph=True )
-
+            # trying to add a progress bar
+            # progress(results)
             # self._dask_results = results
             # progress(results, notebook=True) # this isn't working 
             # gather the results
