@@ -468,39 +468,40 @@ class WholePatternFit:
         # create a list of jobs 
         jobs = []
 
-        from functools import partial
-        shared_data = delayed(self.static_data)
-        pattern_error = delayed(self._pattern_error)
+        # from functools import partial
+        shared_data = self.static_data
+        pattern_error = self._pattern_error
         # if self.hasJacobian & self.use_jacobian:
         #     jacobian = self._jacobian
-        lower_bound = delayed(self.lower_bound)
-        upper_bound = delayed(self.upper_bound)
+        lower_bound = self.lower_bound
+        upper_bound = self.upper_bound
 
 
-        Q_Nx = delayed(self.datacube.Q_Nx)
-        Q_Ny = delayed(self.datacube.Q_Ny)
-        model = delayed(self.model)
+        Q_Nx = self.datacube.Q_Nx
+        Q_Ny = self.datacube.Q_Ny
+        model = self.model
 
-        model_param_inds = delayed(self.model_param_inds)
-        mask = delayed(self.mask)
-        fit_power = delayed(self.fit_power)
-        _track = delayed(self._track) 
-        nParams = delayed(self.nParams)
+        model_param_inds = self.model_param_inds
+        mask = self.mask
+        fit_power = self.fit_power
+        _track = self._track
+        nParams = self.nParams
+        
+        #TODO make these single line
         if hasattr(self, '_fevals'):
-            _fevals = delayed(self._fevals)
+            _fevals = self._fevals
         else:
             _fevals = None
         if hasattr(self, '_xevals'):
-            _xevals = delayed(self._xevals) 
+            _xevals = self._xevals
         else:
             _fevals = None
 
-        _cost_history = delayed(self._cost_history)
+        _cost_history = self._cost_history
         
 
         if resume:
-
-            x0 = delayed(self.fit_data.data)
+            x0 = self.fit_data.data
         else:
             fit_data[:] = self.x0
             x0 = fit_data
@@ -508,6 +509,7 @@ class WholePatternFit:
         # data = self.datacube_dask.to_delayed()
 
         # dealyed_data = delayed(self.datacube.data)
+        # client.scatter(dealyed_data)
         for rx, ry in np.ndindex(self.datacube.Rshape):
 
             # current_pattern = data[rx, ry, 0, 0] * self.intensity_scale
@@ -515,7 +517,7 @@ class WholePatternFit:
             # current_pattern = self.datacube_dask[rx, ry, :, :] * self.intensity_scale
             # current_pattern = dealyed_data[rx, ry, :, :] * self.intensity_scale
 
-            current_x0 = x0[rx,ry]
+            # current_x0 = x0[rx,ry]
             # current_pattern = remote_datacube_dask[rx, ry, :, :] * self.intensity_scale
             
             
@@ -525,12 +527,13 @@ class WholePatternFit:
 
             # TODO This try structure is no longer correct 
             try:
-                # x0 = delayed(self.fit_data.data[rx, ry]) if resume else delayed(self.x0)
+                x0 = self.fit_data.data[rx, ry] if resume else self.x0
 
                 if self.hasJacobian & self.use_jacobian:
                     opt =  delayed(least_squares)(
                         _pattern_error_dask,
-                        current_x0,
+                        x0,
+                        # current_x0,
                         jac=_jacobian_dask,
                         bounds=(lower_bound, upper_bound),
                         kwargs={
@@ -578,7 +581,7 @@ class WholePatternFit:
         self._dask_jobs = jobs
         # chunk up the jobs
         
-        jobs = partition_all(20, jobs)
+        # jobs = partition_all(20, jobs)
         # do the computation 
 
 
@@ -604,7 +607,7 @@ class WholePatternFit:
             results = client.gather(results)
         # self._dask_gathered = results
         # flattern the nested list
-        results = list(chain(*results))
+        # results = list(chain(*results))
 
             
 
