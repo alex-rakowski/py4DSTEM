@@ -468,19 +468,54 @@ class WholePatternFit:
         # create a list of jobs 
         jobs = []
 
+        from functools import partial
+        shared_data = delayed(self.static_data)
+        pattern_error = delayed(self._pattern_error)
+        # if self.hasJacobian & self.use_jacobian:
+        #     jacobian = self._jacobian
+        lower_bound = delayed(self.lower_bound)
+        upper_bound = delayed(self.upper_bound)
 
-        shared_data = self.static_data
-        pattern_error = self._pattern_error
-        if self.hasJacobian & self.use_jacobian:
-            jacobian = self._jacobian
-        lower_bound = self.lower_bound
-        upper_bound = self.upper_bound
 
+        Q_Nx = delayed(self.datacube.Q_Nx)
+        Q_Ny = delayed(self.datacube.Q_Ny)
+        model = delayed(self.model)
 
+        model_param_inds = delayed(self.model_param_inds)
+        mask = delayed(self.mask)
+        fit_power = delayed(self.fit_power)
+        _track = delayed(self._track) 
+        nParams = delayed(self.nParams)
+        if hasattr(self, '_fevals'):
+            _fevals = delayed(self._fevals)
+        else:
+            _fevals = None
+        if hasattr(self, '_xevals'):
+            _xevals = delayed(self._xevals) 
+        else:
+            _fevals = None
+
+        _cost_history = delayed(self._cost_history)
+        
+
+        if resume:
+
+            x0 = delayed(self.fit_data.data)
+        else:
+            fit_data[:] = self.x0
+            x0 = fit_data
+
+        # data = self.datacube_dask.to_delayed()
+
+        # dealyed_data = delayed(self.datacube.data)
         for rx, ry in np.ndindex(self.datacube.Rshape):
 
-            current_pattern = self.datacube_dask[rx, ry, :, :] * self.intensity_scale
+            # current_pattern = data[rx, ry, 0, 0] * self.intensity_scale
             current_pattern = self.datacube.data[rx, ry, :, :] * self.intensity_scale
+            # current_pattern = self.datacube_dask[rx, ry, :, :] * self.intensity_scale
+            # current_pattern = dealyed_data[rx, ry, :, :] * self.intensity_scale
+
+            current_x0 = x0[rx,ry]
             # current_pattern = remote_datacube_dask[rx, ry, :, :] * self.intensity_scale
             
             
@@ -490,15 +525,28 @@ class WholePatternFit:
 
             # TODO This try structure is no longer correct 
             try:
-                x0 = self.fit_data.data[rx, ry] if resume else self.x0
+                # x0 = delayed(self.fit_data.data[rx, ry]) if resume else delayed(self.x0)
 
                 if self.hasJacobian & self.use_jacobian:
                     opt =  delayed(least_squares)(
-                        pattern_error,
-                        x0,
-                        jac=jacobian,
+                        _pattern_error_dask,
+                        current_x0,
+                        jac=_jacobian_dask,
                         bounds=(lower_bound, upper_bound),
-                        args=(current_pattern, shared_data),
+                        kwargs={
+                            'current_pattern' : current_pattern,
+                            'shared_data' : shared_data,  
+                            'Q_Nx' : Q_Nx, 
+                            'Q_Ny' : Q_Ny, 
+                            'model' : model,
+                            'model_param_inds' : model_param_inds,
+                            'mask' : mask,
+                            'fit_power' : fit_power,
+                            '_track' : _track, 
+                            '_fevals' : _fevals,
+                            '_xevals' : _xevals, 
+                            '_cost_history' : _cost_history,
+                            'nParams' : nParams},
                         **fit_opts,
                     )
                 else:
@@ -506,7 +554,8 @@ class WholePatternFit:
                         pattern_error,
                         x0,
                         bounds=(lower_bound, upper_bound),
-                        args=(current_pattern, shared_data),
+                        kwargs={'current_pattern': current_pattern,
+                               'shared_data': shared_data},
                         **fit_opts,
                     )
                 
@@ -528,30 +577,36 @@ class WholePatternFit:
 
         self._dask_jobs = jobs
         # chunk up the jobs
-
+        
         jobs = partition_all(20, jobs)
         # do the computation 
 
 
         from dask.diagnostics import Profiler, ResourceProfiler, CacheProfiler
+        from dask.distributed import get_task_stream, performance_report
         from cachey import nbytes
         # with Profiler() as prof, ResourceProfiler(dt=0.25) as rprof, CacheProfiler(metric=nbytes) as cprof:
-        prof = Profiler()
-        prof.register()
-        rprof = ResourceProfiler(dt=0.25)
-        rprof.register()
-        cprof = CacheProfiler(metric=nbytes)
-        cprof.register()
-        
-        results = client.compute(jobs, optimize_graph=True )
 
-        # self._dask_results = results
-        # progress(results, notebook=True) # this isn't working 
-        # gather the results
-        results = client.gather(results)
+
+        with performance_report(filename="dask-report.html"), get_task_stream(plot='save', filename="task-stream.html") as ts:
+    
+        # prof = Profiler()
+        # prof.register()
+        # rprof = ResourceProfiler(dt=0.25)
+        # rprof.register()
+        # cprof = CacheProfiler(metric=nbytes)
+        # cprof.register()
+            results = client.compute(jobs, optimize_graph=True )
+
+            # self._dask_results = results
+            # progress(results, notebook=True) # this isn't working 
+            # gather the results
+            results = client.gather(results)
         # self._dask_gathered = results
         # flattern the nested list
         results = list(chain(*results))
+
+            
 
         # self._dask_gathered_chained = results
         
@@ -597,8 +652,18 @@ class WholePatternFit:
 
         self.show_fit_metrics()
 
-        return self.fit_data, self.fit_metrics, (prof, rprof, cprof)
+        return self.fit_data, self.fit_metrics, ts # , (prof, rprof, cprof)
 
+    def dumm_func(self, client):
+        from dask.diagnostics import Profiler, ResourceProfiler, CacheProfiler
+        from cachey import nbytes
+        job = delayed(np.multiply)(np.arange(100000), np.arange(100000))
+        with Profiler() as prof, ResourceProfiler(dt=0.0125) as rprof, CacheProfiler(metric=nbytes) as cprof:
+            
+            out = client.compute(job)
+            result = client.gather(out)
+        return ouyt, (prof, rprof, cprof)
+        
     # TODO refactor this to accept_average_CBED
     def accept_mean_CBED_fit(self):
         x = self.mean_CBED_fit.x
@@ -752,3 +817,67 @@ class WholePatternFit:
                 self.lower_bound[ind + j] = v.lower_bound
 
         self.hasJacobian = all([m.hasJacobian for m in self.model])
+
+
+def _jacobian_dask(
+        x, 
+        shared_data,
+        nParams, 
+        Q_Nx,
+        Q_Ny,
+        model,
+        model_param_inds,
+        mask, 
+        **kwargs):
+        # TODO: automatic mixed analytic/finite difference
+
+        J = np.zeros(((Q_Nx * Q_Ny), nParams + 2))
+
+        shared_data["global_x0"] = x[0]
+        shared_data["global_y0"] = x[1]
+        shared_data["global_r"] = np.hypot(
+            (shared_data["xArray"] - x[0]),
+            (shared_data["yArray"] - x[1]),
+        )
+
+        for i, m in enumerate(model):
+            ind = model_param_inds[i] + 2
+            m.jacobian(J, *x[ind : ind + m.nParams].tolist(), offset=ind, **shared_data)
+
+        return J * mask.ravel()[:, np.newaxis]
+
+def _pattern_error_dask(x, 
+                        current_pattern, 
+                        shared_data,  
+                        Q_Nx, 
+                        Q_Ny, 
+                        model, 
+                        model_param_inds,
+                        mask, fit_power,
+                        _track=None, 
+                        _fevals=None,
+                        _xevals=None, 
+                        _cost_history=None,
+                        **kwargs):
+
+        DP = np.zeros((Q_Nx, Q_Ny))
+
+        shared_data["global_x0"] = x[0]
+        shared_data["global_y0"] = x[1]
+        shared_data["global_r"] = np.hypot(
+            (shared_data["xArray"] - x[0]),
+            (shared_data["yArray"] - x[1]),
+        )
+
+        for i, m in enumerate(model):
+            ind = model_param_inds[i] + 2
+            m.func(DP, *x[ind : ind + m.nParams].tolist(), **shared_data)
+
+        DP = (DP**fit_power - current_pattern**fit_power) * mask
+
+        if _track:
+            _fevals.append(DP)
+            _xevals.append(x)
+        _cost_history.append(np.sum(DP**2))
+
+        return DP.ravel()
