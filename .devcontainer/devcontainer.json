@@ -1,7 +1,29 @@
 {
   "image": "mcr.microsoft.com/devcontainers/universal:2",
-  "features": {
-    "ghcr.io/devcontainers/features/python:1": {},
-    "ghcr.io/devcontainers/features/nvidia-cuda:1": {},
-  }
+"features": {
+	// "ghcr.io/devcontainers/features/nvidia-cuda:1": {
+	// 	"cudaVersion": "11.8",
+	// 	"cudnnVersion": "8.6.0.163"
+	// },
+	"ghcr.io/devcontainers-contrib/features/pylint:2": {
+		"version": "latest"
+	},
+	"ghcr.io/devcontainers-contrib/features/ruff:1": {
+		"version": "latest"
+	}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+		"ms-vsliveshare.vsliveshare",
+		"ms-python.python",
+		"ms-toolsai.jupyter",
+		"charliermarsh.ruff",
+		"eamodio.gitlens",
+		"ms-python.black-formatter",
+		// "ms-python.pylint"
+	]
+    }
+}
+// "postCreateCommand": "conda create -n py4dstem python=3.10 -y && source activate py4dstem && pip install -e . && pip install ipykernel jupyter && python -m ipykernel install --user --name py4dstem --display-name py4dstem"
 }
