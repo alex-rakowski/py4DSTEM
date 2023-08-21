@@ -1,29 +1,42 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/miniconda
 {
-	"image": "mcr.microsoft.com/devcontainers/universal:2",
-	"features": {
-		// "ghcr.io/devcontainers/features/nvidia-cuda:1": {
-		// 	"cudaVersion": "11.8",
-		// 	"cudnnVersion": "8.6.0.163"
-		// },
-		"ghcr.io/devcontainers-contrib/features/pylint:2": {
-			"version": "latest"
-		},
-		"ghcr.io/devcontainers-contrib/features/ruff:1": {
-			"version": "latest"
-		}
+	"name": "py4dstem-dev",
+	"build": { 
+		"context": "..",
+		"dockerfile": "Dockerfile"
 	},
+
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	// "features": {},
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": []
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "conda init && pip install -e .",
+
+	// Configure tool-specific properties.
 	"customizations": {
 		"vscode": {
+			"settings": {
+				"python.defaultInterpreterPath": "/opt/conda/envs/py4dstem-dev"
+			},
 			"extensions": [
-				"ms-vsliveshare.vsliveshare",
 				"ms-python.python",
+				"donjayamanne.python-extension-pack",
 				"ms-toolsai.jupyter",
+				"GitHub.codespaces",
+				"ms-azuretools.vscode-docker",
+				"DavidAnson.vscode-markdownlint",
+                "ms-vsliveshare.vsliveshare",
 				"charliermarsh.ruff",
 				"eamodio.gitlens",
-				"ms-python.black-formatter",
-				// "ms-python.pylint"
+				"ms-python.black-formatter"
 			]
 		}
 	}
-	// "postCreateCommand": "conda create -n py4dstem python=3.10 -y && source activate py4dstem && pip install -e . && pip install ipykernel jupyter && python -m ipykernel install --user --name py4dstem --display-name py4dstem"
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
 }
