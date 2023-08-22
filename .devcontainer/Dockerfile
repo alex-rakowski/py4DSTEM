@@ -3,10 +3,11 @@ FROM mcr.microsoft.com/devcontainers/miniconda:0-3
 # Copy environment.yml (if found) to a temp location so we update the environment. Also
 # copy "noop.txt" so the COPY instruction does not fail if no environment.yml exists.
 RUN conda install -n base -c conda-forge mamba
-COPY environment.yml /tmp/conda-tmp/
-RUN if [ -f "/tmp/conda-tmp/environment.yml" ]; then umask 0002 && /opt/conda/bin/mamba env create -f /tmp/conda-tmp/environment.yml; fi \
+COPY .devcontainer/environment.yml* /tmp/conda-tmp/
+RUN conda env create -f /tmp/conda-tmp/environment.yml \
     && rm -rf /tmp/conda-tmp
-
+# RUN conda activate py4DSTEM-dev && \
+#     pip install -e .
 # [Optional] Uncomment to install a different version of Python than the default
 # RUN conda install -y python=3.6 \
 #     && pip install --no-cache-dir pipx \
