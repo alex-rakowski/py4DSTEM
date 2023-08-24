@@ -14,13 +14,14 @@
 	// "forwardPorts": []
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "/opt/conda/bin/conda init && /opt/conda/envs/py4DSTEM-dev/bin/pip install -e /workspaces/py4DSTEM/",
-
+	// "postCreateCommand": "/opt/conda/bin/conda init && /opt/conda/bin/conda env create -f /workspaces/py4DSTEM/.devcontainer/environment.yml && /opt/conda/envs/py4DSTEM-dev/bin/pip install -e /workspaces/py4DSTEM/",
+	"postCreateCommand": "/opt/conda/bin/conda init && /opt/conda/bin/pip install -e /workspaces/py4DSTEM/ && /opt/conda/bin/pip install ipython ipykernel jupyter",
+	
 	// Configure tool-specific properties.
 	"customizations": {
 		"vscode": {
 			"settings": {
-				"python.defaultInterpreterPath": "/opt/conda/envs/py4DSTEM-dev/bin/python"
+				"python.defaultInterpreterPath": "/opt/conda/bin/python"
 			},
 			"extensions": [
 				"ms-python.python",
