@@ -3,11 +3,12 @@ FROM mcr.microsoft.com/vscode/devcontainers/miniconda:0-3
 # copy "noop.txt" so the COPY instruction does not fail if no environment.yml exists.
 # RUN conda install -n base -c conda-forge mamba
 # COPY ./.devcontainer/environment.yml* /tmp/conda-tmp/
-COPY environment.yml* .devcontainer/noop.txt /tmp/conda-tmp/
+# COPY environment.yml* .devcontainer/noop.txt /tmp/conda-tmp/
+RUN conda install -c conda-forge jupyter ipykernel ipython -y
 # RUN conda env create -f /tmp/conda-tmp/environment.yml
     # && rm -rf /tmp/conda-tmp*
-RUN if [ -f "/tmp/conda-tmp/environment.yml" ]; then umask 0002 && /opt/conda/bin/conda env update -n base -f /tmp/conda-tmp/environment.yml; fi \
-    && rm -rf /tmp/conda-tmp
+# RUN if [ -f "/tmp/conda-tmp/environment.yml" ]; then umask 0002 && /opt/conda/bin/conda env update -n base -f /tmp/conda-tmp/environment.yml; fi \
+#     && rm -rf /tmp/conda-tmp
 # RUN conda activate py4DSTEM-dev && \
 #     pip install -e .
 # [Optional] Uncomment to install a different version of Python than the default
