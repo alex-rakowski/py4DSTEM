@@ -75,7 +75,7 @@ class StrainMap(RealSlice, Data):
         ), f".braggvectors must be BraggVectors, not type {type(x)}"
         assert (
             x.calibration.origin is not None
-        ), f"braggvectors must have a calibrated origin"
+        ), "braggvectors must have a calibrated origin"
         self._braggvectors = x
         self._braggvectors.tree(self, force=True)
 
@@ -461,7 +461,7 @@ class StrainMap(RealSlice, Data):
             returnfig=True,
         )
 
-        if not np.all(mask == True):
+        if not np.all(mask is True):
             ax[0][0].imshow(mask, alpha=0.2, cmap="binary")
             ax[0][1].imshow(mask, alpha=0.2, cmap="binary")
             ax[1][0].imshow(mask, alpha=0.2, cmap="binary")

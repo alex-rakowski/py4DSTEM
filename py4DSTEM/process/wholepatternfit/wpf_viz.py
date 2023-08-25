@@ -1,9 +1,8 @@
-from typing import Optional
 import numpy as np
 
 import matplotlib.pyplot as plt
 import matplotlib.colors as mpl_c
-from matplotlib.gridspec import GridSpec
+
 
 def show_model_grid(self, x=None, **plot_kwargs):
     if x is None:
@@ -44,16 +43,10 @@ def show_model_grid(self, x=None, **plot_kwargs):
 
     plt.show()
 
+
 def show_lattice_points(
-    self, 
-    im = None,
-    vmin = None,
-    vmax = None,
-    power = None,
-    returnfig=False, 
-    *args, 
-    **kwargs
-    ):
+    self, im=None, vmin=None, vmax=None, power=None, returnfig=False, *args, **kwargs
+):
     """
     Plotting utility to show the initial lattice points.
     """
@@ -66,16 +59,16 @@ def show_lattice_points(
     fig, ax = plt.subplots(*args, **kwargs)
     if vmin is None and vmax is None:
         ax.matshow(
-            im**power, 
+            im**power,
             cmap="gray",
-            )
+        )
     else:
         ax.matshow(
             im**power,
-            vmin = vmin,
-            vmax = vmax, 
+            vmin=vmin,
+            vmax=vmax,
             cmap="gray",
-            )
+        )
 
     for m in self.model:
         if "Lattice" in m.name:
@@ -90,16 +83,17 @@ def show_lattice_points(
             spots[:, 1] += self.static_data["global_y0"]
 
             ax.scatter(
-                spots[:, 1], 
-                spots[:, 0], 
-                s = 100,
-                marker="x", 
+                spots[:, 1],
+                spots[:, 0],
+                s=100,
+                marker="x",
                 label=m.name,
-                )
+            )
 
     ax.legend()
 
     return (fig, ax) if returnfig else plt.show()
+
 
 def show_fit_metrics(self, returnfig=False, **subplots_kwargs):
     assert hasattr(self, "fit_metrics"), "Please run fitting first!"

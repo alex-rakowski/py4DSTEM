@@ -1,5 +1,4 @@
 import h5py
-import hdf5plugin
 import numpy as np
 from py4DSTEM.datacube import DataCube
 from py4DSTEM.preprocess.utils import bin2D
@@ -13,7 +12,6 @@ def read_arina(
     dtype_bin: float = None,
     flatfield: np.ndarray = None,
 ):
-
     """
     File reader for arina 4D-STEM datasets
     Args:

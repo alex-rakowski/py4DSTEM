@@ -2,13 +2,9 @@
 
 import numpy as np
 from scipy.optimize import leastsq
-from typing import Union, Optional
-
-from emdfile import tqdmnd
-from py4DSTEM.process.utils import get_CoM
 
 
-def get_Q_pixel_size(q_meas, q_known, units='A'):
+def get_Q_pixel_size(q_meas, q_known, units="A"):
     """
     Computes the size of the Q-space pixels.
 
@@ -20,7 +16,7 @@ def get_Q_pixel_size(q_meas, q_known, units='A'):
     Returns:
         (number,str): the detector pixel size, the associated units
     """
-    return 1. / (q_meas * q_known), units+'^-1'
+    return 1.0 / (q_meas * q_known), units + "^-1"
 
 
 def get_dq_from_indexed_peaks(qs, hkl, a):
@@ -48,21 +44,21 @@ def get_dq_from_indexed_peaks(qs, hkl, a):
     assert len(qs) == len(hkl), "qs and hkl must have same length"
 
     # Get spacings
-    d_inv = np.array([np.sqrt(a ** 2 + b ** 2 + c ** 2) for (a, b, c) in hkl])
+    d_inv = np.array([np.sqrt(a**2 + b**2 + c**2) for (a, b, c) in hkl])
     mask = d_inv != 0
 
     # Get scaling factor
     c0 = np.average(qs[mask] / d_inv[mask])
-    fiterr = lambda c: qs[mask] - c * d_inv[mask]
+
+    def fiterr(c):
+        return qs[mask] - c * d_inv[mask]
+
     popt, _ = leastsq(fiterr, c0)
     c = popt[0]
 
     # Get pixel size
     dq = 1 / (c * a)
     qs_fit = d_inv[mask] / a
-    hkl_fit = [hkl[i] for i in range(len(hkl)) if mask[i] == True]
+    hkl_fit = [hkl[i] for i in range(len(hkl)) if mask[i] is True]
 
     return dq, qs_fit, hkl_fit
-
-
-

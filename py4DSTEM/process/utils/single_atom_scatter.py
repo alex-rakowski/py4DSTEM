@@ -42,7 +42,7 @@ class single_atom_scatter(object):
 
         # Result can be returned in units of Volt Angstrom³ ('VA') or Angstrom ('A')
         if units == "VA":
-            return h ** 2 / (2 * np.pi * me * qe) * 1e18 * fe
+            return h**2 / (2 * np.pi * me * qe) * 1e18 * fe
         elif units == "A":
             return fe
 
@@ -51,19 +51,19 @@ class single_atom_scatter(object):
     ):
         if elements is None:
             assert (
-                not self.elements is None
+                self.elements is not None
             ), "Must pass a list of atomic numbers in either class initialization or in call to get_scattering_factor()"
             elements = self.elements
 
         if composition is None:
             assert (
-                not self.elements is None
+                self.elements is not None
             ), "Must pass composition fractions in either class initialization or in call to get_scattering_factor()"
             composition = self.composition
 
         if q_coords is None:
             assert (
-                not self.elements is None
+                self.elements is not None
             ), "Must pass a q_space array in either class initialization or in call to get_scattering_factor()"
             q_coords = self.q_coords
 

@@ -1,8 +1,5 @@
-from inspect import signature
 from typing import Optional
 import numpy as np
-
-from pdb import set_trace
 
 
 class WPFModelPrototype:
@@ -61,28 +58,27 @@ class Parameter:
         initial_value,
         lower_bound: Optional[float] = None,
         upper_bound: Optional[float] = None,
-        ):
-
+    ):
         if hasattr(initial_value, "__iter__"):
             if len(initial_value) == 2:
                 initial_value = (
                     initial_value[0],
-                    initial_value[0]-initial_value[1],
-                    initial_value[0]+initial_value[1],
-                    )
+                    initial_value[0] - initial_value[1],
+                    initial_value[0] + initial_value[1],
+                )
             self.set_params(*initial_value)
         else:
             self.set_params(initial_value, lower_bound, upper_bound)
 
     def set_params(
-        self, 
-        initial_value, 
-        lower_bound, 
+        self,
+        initial_value,
+        lower_bound,
         upper_bound,
-        ):
+    ):
         self.initial_value = initial_value
         self.lower_bound = lower_bound if lower_bound is not None else -np.inf
-        self.upper_bound = upper_bound if upper_bound is not None else  np.inf
+        self.upper_bound = upper_bound if upper_bound is not None else np.inf
 
     def __str__(self):
         return f"Value: {self.initial_value} (Range: {self.lower_bound},{self.upper_bound})"
@@ -132,7 +128,6 @@ class GaussianBackground(WPFModelPrototype):
     def global_center_jacobian(
         self, J: np.ndarray, sigma, level, offset: int, **kwargs
     ) -> None:
-
         exp_expr = np.exp(kwargs["global_r"] ** 2 / (-2 * sigma**2))
 
         # dF/d(global_x0)
@@ -160,7 +155,6 @@ class GaussianBackground(WPFModelPrototype):
     def local_center_jacobian(
         self, J: np.ndarray, sigma, level, x0, y0, offset: int, **kwargs
     ) -> None:
-
         # dF/s(sigma)
         J[:, offset] = (
             level
@@ -236,7 +230,6 @@ class GaussianRing(WPFModelPrototype):
     def global_center_jacobian(
         self, J: np.ndarray, radius, sigma, level, offset: int, **kwargs
     ) -> None:
-
         local_r = radius - kwargs["global_r"]
         clipped_r = np.maximum(local_r, 0.1)
 
@@ -264,9 +257,7 @@ class GaussianRing(WPFModelPrototype):
         J[:, offset] += (-1.0 * level * exp_expr * local_r / (sigma**2)).ravel()
 
         # dF/d(sigma)
-        J[:, offset + 1] = (
-            level * local_r ** 2 * exp_expr / sigma**3
-        ).ravel()
+        J[:, offset + 1] = (level * local_r**2 * exp_expr / sigma**3).ravel()
 
         # dF/d(level)
         J[:, offset + 2] = exp_expr.ravel()
@@ -423,7 +414,6 @@ class SyntheticDiskLattice(WPFModelPrototype):
         )
 
     def local_center_func(self, DP: np.ndarray, *args, **kwargs) -> None:
-
         x0 = args[0]
         y0 = args[1]
         ux = args[2]
@@ -450,19 +440,20 @@ class SyntheticDiskLattice(WPFModelPrototype):
                         4
                         * (
                             np.sqrt(
-                                (kwargs["xArray"] - x) ** 2 + (kwargs["yArray"] - y) ** 2
+                                (kwargs["xArray"] - x) ** 2
+                                + (kwargs["yArray"] - y) ** 2
                             )
                             - disk_radius
                         )
-                        / disk_width, 
-                    20)
+                        / disk_width,
+                        20,
+                    )
                 )
             )
 
     def global_center_jacobian(
         self, J: np.ndarray, *args, offset: int, **kwargs
     ) -> None:
-
         x0 = kwargs["global_x0"]
         y0 = kwargs["global_y0"]
         r = np.maximum(5e-1, kwargs["global_r"])
@@ -573,7 +564,6 @@ class ComplexOverlapKernelDiskLattice(WPFModelPrototype):
         name="Complex Overlapped Disk Lattice",
         verbose=False,
     ):
-
         params = {}
 
         # if global_center:
@@ -647,7 +637,6 @@ class ComplexOverlapKernelDiskLattice(WPFModelPrototype):
         )
 
     def local_center_func(self, DP: np.ndarray, *args, **kwargs) -> None:
-
         x0 = args[0]
         y0 = args[1]
         ux = args[2]
@@ -691,7 +680,6 @@ class KernelDiskLattice(WPFModelPrototype):
         name="Custom Kernel Disk Lattice",
         verbose=False,
     ):
-
         params = {}
 
         # if global_center:
@@ -759,7 +747,6 @@ class KernelDiskLattice(WPFModelPrototype):
         )
 
     def local_center_func(self, DP: np.ndarray, *args, **kwargs) -> None:
-
         x0 = args[0]
         y0 = args[1]
         ux = args[2]

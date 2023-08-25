@@ -1,7 +1,6 @@
 # Reads a digital micrograph 4D-STEM dataset
 
 import numpy as np
-from pathlib import Path
 from ncempy.io import dm
 from emdfile import tqdmnd, Array
 
@@ -9,13 +8,7 @@ from py4DSTEM.datacube import DataCube
 from py4DSTEM.preprocess.utils import bin2D
 
 
-def read_dm(
-    filepath,
-    name="dm_dataset",
-    mem="RAM",
-    binfactor=1,
-    **kwargs
-    ):
+def read_dm(filepath, name="dm_dataset", mem="RAM", binfactor=1, **kwargs):
     """
     Read a digital micrograph 4D-STEM file.
 
@@ -38,7 +31,6 @@ def read_dm(
 
     # open the file
     with dm.fileDM(filepath, on_memory=False) as dmFile:
-
         # loop through datasets looking for one with more than 2D
         # This is needed because:
         #   NCEM TitanX files store 4D data in a 3D array
@@ -98,7 +90,7 @@ def read_dm(
                     Q_pixel_size /= 10
 
                 pixel_size_found = True
-            except Exception as err:
+            except Exception:
                 pass
 
         # Handle 3D NCEM TitanX data
@@ -112,7 +104,7 @@ def read_dm(
                 _mmap = dmFile.getMemmap(dataset_index)
 
                 # get the dtype for the binned data
-                dtype = kwargs.get("dtype", _mmap[0,0].dtype)
+                dtype = kwargs.get("dtype", _mmap[0, 0].dtype)
 
                 if titan_shape is not None:
                     # NCEM TitanX tags were found

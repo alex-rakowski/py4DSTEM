@@ -5,14 +5,14 @@ from py4DSTEM.process.wholepatternfit.wp_models import WPFModelPrototype
 from typing import Optional
 import numpy as np
 
-from scipy.optimize import least_squares, minimize
+from scipy.optimize import least_squares
 import matplotlib.pyplot as plt
 import matplotlib.colors as mpl_c
 from matplotlib.gridspec import GridSpec
 import warnings
 
-class WholePatternFit:
 
+class WholePatternFit:
     from py4DSTEM.process.wholepatternfit.wpf_viz import (
         show_model_grid,
         show_lattice_points,
@@ -72,7 +72,7 @@ class WholePatternFit:
             meanCBED if meanCBED is not None else np.mean(datacube.data, axis=(0, 1))
         )
         # Global scaling parameter
-        self.intensity_scale = 1/np.mean(self.meanCBED)
+        self.intensity_scale = 1 / np.mean(self.meanCBED)
 
         self.mask = mask if mask is not None else np.ones_like(self.meanCBED)
 
@@ -102,7 +102,7 @@ class WholePatternFit:
             self.global_xy0_ub = np.array([datacube.Q_Nx, datacube.Q_Ny])
 
         # set up the global arguments
-        self._setup_static_data(x0,y0)
+        self._setup_static_data(x0, y0)
 
         self.fit_power = fit_power
 
@@ -126,13 +126,11 @@ class WholePatternFit:
             self.add_model(m)
 
     def generate_initial_pattern(self):
-
         # update parameters:
         self._scrape_model_params()
         return self._pattern(self.x0, self.static_data.copy()) / self.intensity_scale
 
     def fit_to_mean_CBED(self, **fit_opts):
-
         # first make sure we have the latest parameters
         self._scrape_model_params()
 
@@ -186,7 +184,7 @@ class WholePatternFit:
         CyRd = mpl_c.LinearSegmentedColormap.from_list(
             "CyRd", ["#00ccff", "#ffffff", "#ff0000"]
         )
-        im = ax.matshow(
+        ax.matshow(
             err_im := -(DP - self.meanCBED),
             cmap=CyRd,
             vmin=-np.abs(err_im).max() / 4,
@@ -208,11 +206,7 @@ class WholePatternFit:
 
         return opt
 
-    def fit_all_patterns(
-        self, 
-        resume = False, 
-        **fit_opts
-        ):
+    def fit_all_patterns(self, resume=False, **fit_opts):
         """
         Apply model fitting to all patterns.
 
@@ -281,14 +275,13 @@ class WholePatternFit:
                     opt.status,
                 ]
             # except LinAlgError as err:
-           # added so that sending an interupt or keyboard interupt breaks out of the for loop rather than just the probe
+            # added so that sending an interupt or keyboard interupt breaks out of the for loop rather than just the probe
             except InterruptedError:
                 break
             except KeyboardInterrupt:
                 break
             except:
-                warnings.warn(f'Fit on position ({rx,ry}) failed with error')
-
+                warnings.warn(f"Fit on position ({rx,ry}) failed with error")
 
         # Convert to RealSlices
         model_names = []
@@ -342,7 +335,7 @@ class WholePatternFit:
         ]
 
         g_maps = []
-        for (i, l) in lattices:
+        for i, l in lattices:
             param_list = list(l.params.keys())
             lattice_offset = param_list.index("ux")
             data_offset = self.model_param_inds[i] + 2 + lattice_offset
@@ -359,7 +352,7 @@ class WholePatternFit:
 
         return g_maps
 
-    def _setup_static_data(self,x0,y0):
+    def _setup_static_data(self, x0, y0):
         self.static_data = {}
 
         xArray, yArray = np.mgrid[0 : self.datacube.Q_Nx, 0 : self.datacube.Q_Ny]
@@ -377,7 +370,6 @@ class WholePatternFit:
         )
 
     def _pattern_error(self, x, current_pattern, shared_data):
-
         DP = np.zeros((self.datacube.Q_Nx, self.datacube.Q_Ny))
 
         shared_data["global_x0"] = x[0]
@@ -401,7 +393,6 @@ class WholePatternFit:
         return DP.ravel()
 
     def _pattern(self, x, shared_data):
-
         DP = np.zeros((self.datacube.Q_Nx, self.datacube.Q_Ny))
 
         shared_data["global_x0"] = x[0]
@@ -436,7 +427,6 @@ class WholePatternFit:
         return J * self.mask.ravel()[:, np.newaxis]
 
     def _scrape_model_params(self):
-
         self.x0 = np.zeros((self.nParams + 2,))
         self.upper_bound = np.zeros_like(self.x0)
         self.lower_bound = np.zeros_like(self.x0)
