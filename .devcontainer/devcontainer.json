@@ -22,7 +22,23 @@
 		"vscode": {
 			"settings": {
 				"python.defaultInterpreterPath": "/opt/conda/bin/python",
-				"editor.defaultFormatter": "ms-python.black-formatter"
+				"python.analysis.autoFormatStrings": true,
+				"python.analysis.completeFunctionParens": true,
+				"ruff.showNotifications": "onWarning",
+				"workbench.colorTheme": "Monokai",
+				// "editor.defaultFormatter": "ms-python.black-formatter",
+				"editor.fontFamily": "Menlo, Monaco, 'Courier New', monospace",
+				"editor.bracketPairColorization.enabled": true,
+				"editor.guides.bracketPairs": "active",
+				"editor.minimap.renderCharacters": false,
+				"editor.minimap.autohide": true,
+				"editor.minimap.scale": 2,
+				"[python]": {
+					"editor.defaultFormatter": "ms-python.black-formatter",
+					"editor.codeActionsOnSave": {
+						"source.organizeImports": false
+					}
+				}
 			},
 			"extensions": [
 				"ms-python.python",
