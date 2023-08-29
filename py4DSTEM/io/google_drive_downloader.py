@@ -60,7 +60,7 @@ file_ids = {
         '1B-xX3F65JcWzAg0v7f1aVwnawPIfb5_o'
     ),
     'FCU-Net' : (
-        'filename.name',
+        'model_metadata.json',
         '1-KX0saEYfhZ9IJAOwabH38PCVtfXidJi',
     ),
     'small_datacube' : (
@@ -226,6 +226,9 @@ def gdrive_download(
     # parse destination
     if destination is None:
         destination = os.getcwd()
+    else:
+        if not os.path.exists(destination): 
+            os.mkdir(destination)
     assert(os.path.exists(destination)), f"`destination` must exist on filesystem. Received {destination}"
 
     # download single files
