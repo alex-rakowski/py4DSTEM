@@ -28,7 +28,22 @@ canvas{
     top: 0;
     transform: rotate(180deg);
 }
+.intro_paragraph {
+    width: 50vw
+}
 
+.intro_header {
+    background: linear-gradient(90deg,#ff8a00, #e52e71 20%,  #2e49e5);
+    text-shadow: none;
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    font-size: 5em;
+}
+
+h2.intro_header {
+    font-size: 3em;
+}
 a, a:link, a:visited {
     color: inherit;
     text-decoration: none;
@@ -54,7 +69,7 @@ iframe {
 img.hero {
     border-radius: 60px;
     width: auto;
-    max-height: 40vw;
+    max-height: 30vw;
     display: block;
 }
 h1.hero {
@@ -143,6 +158,8 @@ h1.hero {
 .card:not(:first-child) {
     margin-left: -130px;
 }
+
+
 
 .card-author {
     margin: auto 0 0;
