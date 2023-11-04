@@ -420,26 +420,15 @@ class Crystal:
             atoms (ase.Atoms): an ASE atoms object
 
         """
-
+        # get the occupancies from the atoms object
+        occupancies = atoms.arrays['occupancies'] if "occupancies" in atoms.arrays.keys() else None
+        #TODO support getting it from atoms.info['occupancy'] dictionary
         xtal = Crystal(
             positions=atoms.get_scaled_positions(),  # fractional coords
             numbers=atoms.numbers,
             cell=atoms.cell.array,
+            occupancy= occupancies,
         )
-
-        # get occupancies
-        # ASE seems to have different ways of storing occupancies
-        # if ASE object created from prismatic file
-        if "occupancies" in atoms.arrays.keys():
-            # np.array with length number of atoms
-            xtal.occupancy = atoms.arrays["occupancies"]
-            # if created from cif file
-        elif "occupancy" in atoms.info.keys():
-            # python dict with occupancy per site
-            xtal.occupancy = atoms.info["occupancy"]
-        # TODO add in elif statement if other ways appear
-        else:
-            print(Warning("Could not find occupancies of crystal"))
         return xtal
 
     def from_prismatic(filepath):
@@ -451,32 +440,19 @@ class Crystal:
 
         """
 
-        # check if ase is installed
-        if find_spec("ase") is None:
-            raise ImportWarning("Could not import ASE, please install, and try again")
-        else:
-            from ase.io import read
+        from ase import io
 
-        atoms = read(filepath, format="prismatic")
+        # read the atoms using ase 
+        atoms = io.read(filepath, format="prismatic")
 
-        # create the crystal object
+        # get the occupancies from the atoms object
+        occupancies = atoms.arrays['occupancies'] if "occupancies" in atoms.arrays.keys() else None
         xtal = Crystal(
             positions=atoms.get_scaled_positions(),  # fractional coords
             numbers=atoms.numbers,
             cell=atoms.cell.array,
+            occupancy= occupancies,
         )
-        # add occupancies
-        # It should be this one but keeping other method in case
-        if "occupancies" in atoms.arrays.keys():
-            # np.array with length number of atoms
-            xtal.occupancy = atoms.arrays["occupancies"]
-            # if created from cif file
-        elif "occupancy" in atoms.info.keys():
-            # python dict with occupancy per site
-            xtal.occupancy = atoms.info["occupancy"]
-        # TODO add in elif statement if other ways appear
-        else:
-            print(Warning("Could not find occupancies of crystal"))
         return xtal
 
     def from_cif(
