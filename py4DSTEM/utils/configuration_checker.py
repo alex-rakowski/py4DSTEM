@@ -1,11 +1,11 @@
 #### this file contains a function/s that will check if various
 # libaries/compute options are available
 import importlib
-from operator import mod
 
 # list of modules we expect/may expect to be installed
 #  as part of a standard py4DSTEM installation
 # this needs to be the import name e.g. import mp_api not mp-api
+# TODO use importlib.metadata.requirements to populate
 modules = [
     "crystal4D",
     "cupy",
@@ -304,7 +304,7 @@ def import_tester(m: str) -> bool:
     # try and import the module
     try:
         importlib.import_module(m)
-    except:
+    except ModuleNotFoundError:
         state = False
 
     return state
@@ -391,7 +391,8 @@ def check_cupy_gpu(gratuitously_verbose: bool, **kwargs):
         try:
             d = cp.cuda.Device(i)
             hasattr(d, "attributes")
-        except:
+        # TODO work out what error is raised
+        except (AttributeError, Exception):
             num_gpus_detected = i
             break
 
