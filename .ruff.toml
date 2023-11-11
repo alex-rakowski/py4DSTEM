@@ -1,6 +1,6 @@
 select = [
   "E", "F", "W", # flake8
-  "I"            # isort
+  "I",           # isort
   "B",           # flake8-bugbear
   "RUF",         # Ruff-specific
   "UP",          # pyupgrade
