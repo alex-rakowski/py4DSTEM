@@ -1,5 +1,6 @@
-import unittest
-from typing import Dict, Tuple, TypeVar, List, Optional, Iterable, Callable
+from collections.abc import Iterable
+from typing import Callable, Optional
+
 import numpy as np
 
 
@@ -7,8 +8,8 @@ import numpy as np
 def check_array(
     arr: np.ndarray,
     dtype: Optional[str | np.dtype] = None,
-    shape: Optional[Tuple[int, ...]] = None,
-    zeroes: Optional[bool] = None,
+    shape: Optional[tuple[int, ...]] = None,
+    zeros: Optional[bool] = None,
     nans: bool = True,
     finite: Optional[bool] = None,
 ) -> None:
@@ -49,7 +50,7 @@ def check_array(
             ), f"expected {dtype}, but array contains {arr.dtype}"
 
     # check the zero'ness of the array
-    if zeroes is not None:
+    if zeros is not None:
         assert (
             arr == 0 if zeros else arr != 0
         ).all(), f"expected {'==' if zeros else '!='} 0, but found {'==' if ~zeros else '!='}"
@@ -59,12 +60,12 @@ def check_array(
 
     # check if array is finite:
     if finite:
-        assert np.isfinite(ptycho.object_fft).all(), "array is not finite"
+        assert np.isfinite(arr).all(), "array is not finite"
 
 
 def check_complex_zeros(
     arr: np.ndarray,
-    shape: Optional[Tuple[int, ...]] = None,
+    shape: Optional[tuple[int, ...]] = None,
 ) -> None:
     """
     Checks the given complex array for the following properties:
@@ -83,17 +84,17 @@ def check_complex_zeros(
             arr.shape == shape
         ), f"{arr.shape = } doesn't match expected shape {shape}"
 
-    assert (arr == 0).all(), f"expected array to be zeros, but got non zeros"
+    assert (arr == 0).all(), "expected array to be zeros, but got non zeros"
     assert arr.dtype in tuple(
         np.sctypes["complex"]
     ), f"expected complex data but got {arr.dtype}"
     assert np.isnan(arr).any() is not True, "array contains nans"
-    assert np.isfinite(ptycho.object_fft).all(), "array is not finite"
+    assert np.isfinite(arr).all(), "array is not finite"
 
 
 def check_complex_nonzeros(
     arr: np.ndarray,
-    shape: Optional[Tuple[int, ...]] = None,
+    shape: Optional[tuple[int, ...]] = None,
 ) -> None:
     """
     Checks the given complex array for the following properties:
@@ -112,17 +113,17 @@ def check_complex_nonzeros(
             arr.shape == shape
         ), f"{arr.shape = } doesn't match expected shape {shape}"
 
-    assert (arr != 0).all(), f"expected array to be non zeros, but got zeros"
+    assert (arr != 0).all(), "expected array to be non zeros, but got zeros"
     assert arr.dtype in tuple(
         np.sctypes["complex"]
     ), f"expected complex data but got {arr.dtype}"
     assert np.isnan(arr).any() is not True, "array contains nans"
-    assert np.isfinite(ptycho.object_fft).all(), "array is not finite"
+    assert np.isfinite(arr).all(), "array is not finite"
 
 
 def check_real_zeros(
     arr: np.ndarray,
-    shape: Optional[Tuple[int, ...]] = None,
+    shape: Optional[tuple[int, ...]] = None,
 ) -> None:
     """
     Checks the given real array for the following properties:
@@ -141,17 +142,17 @@ def check_real_zeros(
             arr.shape == shape
         ), f"{arr.shape = } doesn't match expected shape {shape}"
 
-    assert (arr == 0).all(), f"expected array to be zeros, but got non zeros"
+    assert (arr == 0).all(), "expected array to be zeros, but got non zeros"
     assert arr.dtype in tuple(
         np.sctypes["int"] + np.sctypes["uint"] + np.sctypes["float"]
     ), f"expected complex data but got {arr.dtype}"
     assert np.isnan(arr).any() is not True, "array contains nans"
-    assert np.isfinite(ptycho.object_fft).all(), "array is not finite"
+    assert np.isfinite(arr).all(), "array is not finite"
 
 
 def check_real_nonzeros(
     arr: np.ndarray,
-    shape: Optional[Tuple[int, ...]] = None,
+    shape: Optional[tuple[int, ...]] = None,
 ) -> None:
     """
     Checks the given real array for the following properties:
@@ -169,19 +170,19 @@ def check_real_nonzeros(
             arr.shape == shape
         ), f"{arr.shape = } doesn't match expected shape {shape}"
 
-    assert (arr != 0).all(), f"expected array to be non zeros, but got zeros"
+    assert (arr != 0).all(), "expected array to be non zeros, but got zeros"
     assert arr.dtype in tuple(
         np.sctypes["int"] + np.sctypes["uint"] + np.sctypes["float"]
     ), f"expected complex data but got {arr.dtype}"
     assert np.isnan(arr).any() is not True, "array contains nans"
-    assert np.isfinite(ptycho.object_fft).all(), "array is not finite"
+    assert np.isfinite(arr).all(), "array is not finite"
 
 
 def check_arrays(
     class_obj: type,
-    check_func: Callable | List[Callable] | Tuple[Callable, ...],
-    attributres: Iterable[str],
-    shape: Optional[Tuple[int, ...]] = None,
+    check_func: Callable | list[Callable] | tuple[Callable, ...],
+    attributes: Iterable[str],
+    shape: Optional[tuple[int, ...]] = None,
 ) -> None:
     """
     Checks the given attributes of the given class object for various properties using the given check function(s).
@@ -199,14 +200,14 @@ def check_arrays(
 
     if hasattr(check_func, "len"):
         # check the number of check funcs and attributes is equal
-        assert len(check_func) == len(attributres)
+        assert len(check_func) == len(attributes)
         for attribute, check in zip(attributes, check_func):
             arr = getattr(class_obj, attribute)
             check(arr=arr, shape=shape)
     # if single func
     else:
         # loop over the attributes
-        for attributre in attributres:
+        for attributre in attributes:
             # get the arr
             arr = getattr(class_obj, attributre)
             # run the check func on it

@@ -1,6 +1,5 @@
 import unittest
-from typing import Dict, Tuple, TypeVar, List, Optional, Iterable, Callable
-import numpy as np
+from collections.abc import Iterable
 
 
 # ExceptionType = TypeVar("ExceptionType", bound=Exception)
@@ -8,7 +7,7 @@ import numpy as np
 # Change this to a func
 def test_attrs_raise_errors(
     class_obj: type,
-    expected_errors: Dict[str, Tuple[Exception,]],
+    expected_errors: dict[str, tuple[Exception,]],
 ) -> None:
     """
     Test that the given attributes of the given class object raise the expected exceptions.
