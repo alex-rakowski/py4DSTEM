@@ -1,0 +1,17 @@
+select = [
+  "E", "F", "W", # flake8
+  "I"            # isort
+  "B",           # flake8-bugbear
+  "RUF",         # Ruff-specific
+  "UP",          # pyupgrade
+  "NPY",         # Numpy specific 
+]
+extend-ignore = [
+  "E501",   # Line too long
+]
+target-version = "py39"
+src = ["py4DSTEM"]
+unfixable = [
+  "F841", # Removes unused variables
+]
+exclude = "*__init__.py"
