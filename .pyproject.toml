@@ -1,0 +1,5 @@
+[tool.black]
+line-length = 80 # set line length explicity 
+exclude = ["**/__init__.py"] # don't format __init__.py files
+src = ["py4DSTEM"] # only look at the py4DSTEM dir
+target_version = ['py39', 'py310', 'py311', 'py312'] # versions supported by py4DSTEM
