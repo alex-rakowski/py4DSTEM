@@ -1,4 +1,5 @@
-import unittest
+# import unittest
+import pytest
 from collections.abc import Iterable
 
 
@@ -25,9 +26,7 @@ def test_attrs_raise_errors(
     for attribute, expected_error in expected_errors.items():
         # print(attribute)
 
-        with unittest.TestCase.assertRaises(
-            class_obj, expected_exception=expected_error
-        ):
+        with pytest.raises(expected_exception=expected_error):
             if callable(getattr(class_obj, attribute)):
                 assert getattr(
                     class_obj, attribute
