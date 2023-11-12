@@ -8,6 +8,8 @@ select = [
 ]
 extend-ignore = [
   "E501",   # Line too long
+  "W293",   # whitespace on blank line  black will handle
+  "W291",   # trainling whitespace black will
 ]
 target-version = "py39"
 src = ["py4DSTEM"]
