@@ -1,9 +1,8 @@
-import unittest
 from pathlib import Path
-import pytest
 
 import numpy as np
 import py4DSTEM
+import pytest
 from py4DSTEM.utils.test_utils.array_utils import (
     # check_array,
     check_arrays,
@@ -14,11 +13,9 @@ from py4DSTEM.utils.test_utils.array_utils import (
     check_real_zeros,
     check_ssim_real,
 )
-
 from py4DSTEM.utils.test_utils.attributes_utils import (
     test_attrs_raise_errors,
     test_getattrs,
-    # test_hasattrs,
 )
 
 # set filepath for the Si.cif file
@@ -34,15 +31,15 @@ path = (
 class TestSingleslicePtychographicReconstruction:
     # setup/teardown
     @pytest.fixture
-    def setup_class(cls):
+    def setup_class(self):
         # load the datacube
         datacube = py4DSTEM.read(path, data_id="Placeholder")
         # assign to self
-        cls.datacube = datacube
+        self.datacube = datacube
 
         # some of these are taken from the simulation details
         # set the params init object
-        cls.init_params = {
+        self.init_params = {
             "energy": 200000.0,
             "verbose": False,
             "semiangle_cutoff": 20,
@@ -51,23 +48,23 @@ class TestSingleslicePtychographicReconstruction:
             "object_type": "potential",
         }
         # set params for pre pre-process
-        cls.preprocess_params = {
+        self.preprocess_params = {
             "force_com_rotation": 0,
             "force_com_transpose": False,
             "plot_rotation": False,
             "plot_center_of_mass": False,
         }
         # set params for reconstruction
-        cls.reconstruct_params = {
+        self.reconstruct_params = {
             "max_iter": 64,
             "step_size": 0.125,
             "reset": True,
             "seed_random": 42,
         }
         # set to None initally to help with future tests
-        cls.SSPR = None
+        self.SSPR = None
 
-    # @pytest.mark.order(1)
+    @pytest.fixture
     def test_init_SingleslicePtychographicReconstruction(self):
         """
         Tests that the `SingleslicePtychographicReconstruction` class can be initialized successfully.
@@ -77,7 +74,7 @@ class TestSingleslicePtychographicReconstruction:
         """
         # try creating it
         try:
-            self.SSPR = py4DSTEM.process.phase.SingleslicePtychographicReconstruction(
+            SSPR = py4DSTEM.process.phase.SingleslicePtychographicReconstruction(
                 datacube=self.datacube,
                 **self.init_params,
             )
@@ -87,13 +84,13 @@ class TestSingleslicePtychographicReconstruction:
             raise
         # I think this isn't needed
         assert (
-            self.SSPR is not None
+            SSPR is not None
         ), "Failed to initialize SingleslicePtychographicReconstruction object."
         # check it has the preprocess and reconstruct methods
-        assert hasattr(self.SSPR, "preprocess"), "Doesn't have preprocess method"
-        assert hasattr(self.SSPR, "reconstruct"), "Doesn't have reconstruct method"
+        assert hasattr(SSPR, "preprocess"), "Doesn't have preprocess method"
+        assert hasattr(SSPR, "reconstruct"), "Doesn't have reconstruct method"
         # check it has metadata dict
-        assert isinstance(self.SSPR.metadata, dict)
+        assert isinstance(SSPR.metadata, dict)
         # check the properties raise the expected errors
         expected_errors = {
             "object_cropped": AttributeError,
@@ -103,12 +100,14 @@ class TestSingleslicePtychographicReconstruction:
             # "h" : (AttributeError),
         }
         # this looks through the expected errors and checks the raise the expected errors
-        test_attrs_raise_errors(self.SSPR, expected_errors)
+        test_attrs_raise_errors(SSPR, expected_errors)
         # set state switch
-        self.SSPR = self.SSPR
+        # self.SSPR = self.SSPR
+        self.SSPR = SSPR
+
         self.init_correct = True
 
-    # @pytest.mark.order(2)
+    # @pytest.fixture
     def test_preprocess_SingleslicePtychographicReconstruction(self):
         self.SSPR = self.SSPR
         assert (
@@ -143,9 +142,7 @@ class TestSingleslicePtychographicReconstruction:
         )
         # check calling visualize fails with AttributeError,
         # it hasn't been created at this stage
-        with unittest.TestCase.assertRaises(
-            self.SSPR, expected_exception=AttributeError
-        ):
+        with pytest.raises(expected_exception=AttributeError):
             assert (
                 self.SSPR.visualize()
             ), "Unexpected behaviour - It didn't raise expected AttributeError or anyother exception"
@@ -155,6 +152,7 @@ class TestSingleslicePtychographicReconstruction:
         self.SSPR = self.SSPR
         self.preprocess = True
 
+    @pytest.fixture
     def test_reconstruct_SingleslicePtychographicReconstruction(self):
         # check its been created
         self.SSPR = self.SSPR
