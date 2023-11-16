@@ -17,6 +17,7 @@ exclude =
     ; __init__.py # totally ignore __init__.py files
     setup.py # ignore setup.py file
     docs/
-#F401 ignore unsued imports in __init__.py files
+#F401 ignore unused imports in __init__.py files
+#F403 ignore unable to detect undefined names from import *
 per-file-ignores =
-    __init__.py:F401
+    __init__.py:F401,F403
