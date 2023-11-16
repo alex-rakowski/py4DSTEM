@@ -1,6 +1,7 @@
 # Functions for calculating diffraction patterns, matching them to experiments, and creating orientation and phase maps.
 
 import numpy as np
+import numpy.typing as npt
 from scipy.ndimage import gaussian_filter
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle
@@ -35,7 +36,6 @@ class Crystal:
         save_ang_file,
         symmetry_reduce_directions,
         orientation_map_to_orix_CrystalMap,
-        save_ang_file,
     )
 
     from py4DSTEM.process.diffraction.crystal_viz import (
@@ -877,16 +877,13 @@ class Crystal:
         if return_calc is True:
             return radii_unique, intensity_unique
 
-
-
-
     def generate_projected_potential(
         self,
-        im_size = (256,256),
-        pixel_size_Ang = 0.1,
-        potential_radius_Ang =  3.0,
-        sigma_image_blur_Ang = 0.1,
-        plot_result = False,
+        im_size: tuple | npt.NDArray = (256, 256),
+        pixel_size_Ang: float = 0.1,
+        potential_radius_Ang: float = 3.0,
+        sigma_image_blur_Ang: float = 0.1,
+        plot_result: bool = False,
         orientation: Optional[Orientation] = None,
         ind_orientation: Optional[int] = 0,
         orientation_matrix: Optional[np.ndarray] = None,
@@ -906,9 +903,9 @@ class Crystal:
         Returns
         --------
             orientation (Orientation):       an Orientation class object
-            
+
         Returns:
-        im_potential: (np.array)       
+        im_potential: (np.array)
 
         """
 
@@ -927,78 +924,102 @@ class Crystal:
                 zone_axis_lattice, proj_x_lattice, zone_axis_cartesian, proj_x_cartesian
             )
         # projection directions of potential image
-        proj_x = orientation_matrix[:,0] \
-            / np.linalg.norm(orientation_matrix[:,0])
-        proj_y = orientation_matrix[:,1] \
-            / np.linalg.norm(orientation_matrix[:,1])
-        proj_z = orientation_matrix[:,2] \
-            / np.linalg.norm(orientation_matrix[:,2])
+        proj_x = orientation_matrix[:, 0] / np.linalg.norm(orientation_matrix[:, 0])
+        proj_y = orientation_matrix[:, 1] / np.linalg.norm(orientation_matrix[:, 1])
+        proj_z = orientation_matrix[:, 2] / np.linalg.norm(orientation_matrix[:, 2])
 
+        proj_xyz = np.vstack(
+            (
+                proj_x,
+                proj_y,
+                proj_z,
+            )
+        )
+
+        # proj_xyz = np.linalg.inv(proj_xyz)
         # Determine unit cell axes to tile over
-        uvw = self.lat_real / \
-            np.linalg.norm(self.lat_real, axis = 1)
+        uvw = self.lat_real / np.linalg.norm(self.lat_real, axis=1)
+
+        uvw_proj = uvw @ proj_xyz
         test = np.abs(uvw @ proj_z)
         inds_tile = np.argsort(test)[:2]
-        m_tile = self.lat_real[inds_tile,:]
-
+        m_tile = self.lat_real[inds_tile, :]
         # Determine tiling range
-        p_corners = np.array([
-            [-im_size_Ang[0]*0.5,-im_size_Ang[1]*0.5, 0.0],
-            [ im_size_Ang[0]*0.5,-im_size_Ang[1]*0.5, 0.0],
-            [ im_size_Ang[0]*0.5, im_size_Ang[1]*0.5, 0.0],
-            [-im_size_Ang[0]*0.5, im_size_Ang[1]*0.5, 0.0],
-        ])
-        p_corners_proj = p_corners @ \
-            np.linalg.inv(np.vstack((proj_x, proj_y, proj_z)))
-        ab = np.round(np.linalg.lstsq(
-            m_tile.T,
-            p_corners_proj.T, 
-            rcond=None)[0])
-        a_range = np.array((np.min(ab[0])-1,np.max(ab[0])+1))
-        b_range = np.array((np.min(ab[1])-1,np.max(ab[1])+1))
+        p_corners = np.array(
+            [
+                [-im_size_Ang[0] * 0.5, -im_size_Ang[1] * 0.5, 0.0],
+                [im_size_Ang[0] * 0.5, -im_size_Ang[1] * 0.5, 0.0],
+                [im_size_Ang[0] * 0.5, im_size_Ang[1] * 0.5, 0.0],
+                [-im_size_Ang[0] * 0.5, im_size_Ang[1] * 0.5, 0.0],
+            ]
+        )
+        # p_corners_proj = p_corners @ np.linalg.inv(np.vstack((proj_x, proj_y, proj_z)))
+        # p_corners_proj = p_corners @ uvw_proj #np.linalg.inv()))
+        p_corners_proj = p_corners @ np.linalg.inv(uvw_proj)  # np.linalg.inv()))
+
+        ab = np.round(np.linalg.lstsq(m_tile.T, p_corners_proj.T, rcond=None)[0])
+        # a_range = np.array((np.floor(np.min(ab[0]) - 1) , np.ceil(np.max(ab[0]) + 1 )))#.astype('int')
+        # b_range = np.array((np.floor(np.min(ab[1]) - 1) , np.ceil(np.max(ab[1]) + 1 )))#.astype('int')
+
+        a_range = np.array((np.min(ab[0]) - 3, np.max(ab[0]) + 4)).astype("int")
+        b_range = np.array((np.min(ab[1]) - 3, np.max(ab[1]) + 4)).astype("int")
+
+        # a_range = np.array((np.min(ab[0]), np.max(ab[0]))).astype('int')
+        # b_range = np.array((np.min(ab[1]), np.max(ab[1]))).astype('int')
 
         # Tile unit cell
         a_ind, b_ind, atoms_ind = np.meshgrid(
-            np.arange(a_range[0],a_range[1]),
-            np.arange(b_range[0],b_range[1]),
+            np.arange(a_range[0], a_range[1]),
+            np.arange(b_range[0], b_range[1]),
             np.arange(self.positions.shape[0]),
+            indexing="ij",
         )
-        abc_atoms = self.positions[atoms_ind.ravel(),:]
-        abc_atoms[:,inds_tile[0]] += a_ind.ravel()
-        abc_atoms[:,inds_tile[1]] += b_ind.ravel()
+        abc_atoms = self.positions[atoms_ind.ravel(), :]
+        print(abc_atoms.shape)
+        print(abc_atoms[0])
+        print(abc_atoms.ravel()[0])
+        print(a_ind.ravel()[0])
+        print(b_ind.ravel()[0])
+        abc_atoms[:, inds_tile[0]] += a_ind.ravel()
+        abc_atoms[:, inds_tile[1]] += b_ind.ravel()
+        print(abc_atoms[0])
         # NOTE - should this be self.lat_real.T?
         xyz_atoms_ang = abc_atoms @ self.lat_real
         atoms_ID_all = self.numbers[atoms_ind.ravel()]
 
         # Project into projected potential image plane
-        x = (xyz_atoms_ang @ proj_x) / pixel_size_Ang + im_size[0]/2.0
-        y = (xyz_atoms_ang @ proj_y) / pixel_size_Ang + im_size[1]/2.0
-        atoms_del = np.logical_or.reduce((
-            x < 0,
-            y < 0,
-            x > im_size[0],
-            y > im_size[1],
-        ))
+        x = (xyz_atoms_ang @ proj_x) / pixel_size_Ang + im_size[0] / 2.0
+        y = (xyz_atoms_ang @ proj_y) / pixel_size_Ang + im_size[1] / 2.0
+        atoms_del = np.logical_or.reduce(
+            (
+                x < 0,
+                y < 0,
+                x > im_size[0],
+                y > im_size[1],
+            )
+        )
         x = np.delete(x, atoms_del)
         y = np.delete(y, atoms_del)
         atoms_ID_all = np.delete(atoms_ID_all, atoms_del)
 
         # Coordinate system for atomic projected potentials
         potential_radius = np.ceil(potential_radius_Ang / pixel_size_Ang)
-        R = np.arange(0.5-potential_radius,potential_radius+0.5)
-        R_ind = R.astype('int')
-        R_2D = np.sqrt(R[:,None]**2 + R[None,:]**2)
+        R = np.arange(0.5 - potential_radius, potential_radius + 0.5)
+        R_ind = R.astype("int")
+        R_2D = np.sqrt(R[:, None] ** 2 + R[None, :] ** 2)
 
         # Lookup table for atomic projected potentials
         atoms_ID = np.unique(self.numbers)
-        atoms_lookup = np.zeros((
-            atoms_ID.shape[0],
-            R_2D.shape[0],
-            R_2D.shape[1],
-            ))
+        atoms_lookup = np.zeros(
+            (
+                atoms_ID.shape[0],
+                R_2D.shape[0],
+                R_2D.shape[1],
+            )
+        )
         for a0 in range(atoms_ID.shape[0]):
             atom_sf = single_atom_scatter([atoms_ID[a0]])
-            atoms_lookup[a0,:,:] = atom_sf.projected_potential(atoms_ID[a0], R_2D)
+            atoms_lookup[a0, :, :] = atom_sf.projected_potential(atoms_ID[a0], R_2D)
 
         # initialize potential
         im_potential = np.zeros(im_size)
@@ -1007,16 +1028,10 @@ class Crystal:
         for a0 in range(atoms_ID_all.shape[0]):
             ind = np.argmin(np.abs(atoms_ID - atoms_ID_all[a0]))
 
-            x_ind = np.clip(
-                np.round(x[a0]).astype('int') + R_ind,
-                0,
-                im_size[0]-1)
-            y_ind = np.clip(
-                np.round(y[a0]).astype('int') + R_ind,
-                0,
-                im_size[1]-1)
+            x_ind = np.clip(np.round(x[a0]).astype("int") + R_ind, 0, im_size[0] - 1)
+            y_ind = np.clip(np.round(y[a0]).astype("int") + R_ind, 0, im_size[1] - 1)
 
-            im_potential[x_ind[None,:],y_ind[:,None]] += atoms_lookup[ind]
+            im_potential[x_ind[None, :], y_ind[:, None]] += atoms_lookup[ind]
 
         # if needed, apply gaussian blurring
         if sigma_image_blur_Ang > 0:
@@ -1024,19 +1039,19 @@ class Crystal:
             im_potential = gaussian_filter(
                 im_potential,
                 sigma_image_blur,
-                mode = 'nearest',
-                )
+                mode="nearest",
+            )
 
         if plot_result:
             # test plotting
-            fig,ax = plt.subplots(figsize = (6,6))
+            fig, ax = plt.subplots(figsize=(6, 6))
             ax.imshow(
                 im_potential,
-                cmap = 'gray',
-                )
+                cmap="gray",
+            )
             # ax.scatter(y,x)
             ax.set_axis_off()
-            ax.set_aspect('equal')
+            ax.set_aspect("equal")
 
         return im_potential
 
