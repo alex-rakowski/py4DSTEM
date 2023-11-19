@@ -1,6 +1,50 @@
-import gdown
 import os
 import warnings
+from itertools import chain
+
+import gdown
+import requests
+from emdfile import tqdmnd
+
+
+def check_links(file_ids: dict[str, tuple[str, str]], verbose: bool = True) -> None:
+    """
+    Checks the validity of Google Drive links provided in a dictionary.
+
+    Args:
+        file_ids (dict[str, tuple[str, str]]): A dictionary of file IDs and their corresponding filenames and links.
+        verbose (bool, optional): Whether to print verbose output. Defaults to True.
+
+    Returns:
+        None
+    """
+    # we store the UUID or whatnot string we need to covert to URL link
+    gdrive_string_prefix = r"https://drive.google.com/file/d/"
+    gdrive_string_sufix = r"/view"
+    # loop over the dict items
+    # could maybe a progress bar
+
+    for key, (filename, link) in tqdmnd(
+        file_ids.items(),
+        desc="Checking Download Links",
+        unit="Link",
+        unit_scale=True,
+        disable=not verbose,
+    ):
+        # create the URL
+        check_link = f"{gdrive_string_prefix}{link}{gdrive_string_sufix}"
+        # option to print to something to show progress
+        # if verbose:
+        #     print(f"checking {filename = } : {check_link = }")
+        # get the header for the link
+        resp = requests.head(check_link)
+        # valid response is 200, raise warning if anything else
+        if resp.status_code != 200:
+            warnings.warn(
+                f"Invalid link found for: {(key, filename, link, check_link)}",
+                stacklevel=2,
+            )
+    return None
 
 
 ### File IDs
@@ -125,6 +169,107 @@ file_ids = {
     ),
 }
 
+notebook_file_ids = {
+    "vacuum_probe_20x20": (
+        "vacuum_probe_20x20.dm4",
+        "1QTcSKzZjHZd1fDimSI_q9_WsAU25NIXe",
+    ),
+    "sim_Au_data_all_binned": (
+        "sim_Au_data_all_binned.h5",
+        "1m-jfXnStFWq0jo_hPY-3OtYaO62wHP3A",
+    ),
+    "calibrationData_simulatedAuNanoplatelet_binned_v14": (
+        "calibrationData_simulatedAuNanoplatelet_binned_v14.h5",
+        "1BJ_1qWFlbaJuOlKe7TapLFbEbQ0S600U",
+    ),
+    "carbon_nanotube_data": (
+        "carbon_nanotube_data.h5",
+        "1bHv3u61Cr-y_GkdWHrJGh1lw2VKmt3UM",
+    ),
+    "ptycho_sim_01_data": (
+        "ptycho_sim_01_data.h5",
+        "1uyeQAQa4DaMwHqN9EHQFCMKAve0_Fgfz",
+    ),
+    "ptycho_sim_01_probe": (
+        "ptycho_sim_01_probe.h5",
+        "1xJgQoxhWMBbtknwRfqB_BkULvgiJe-c1",
+    ),
+    "dataset19_bin4": (
+        "dataset19_bin4.h5",
+        "1lK-TAMXN1MpWG0Q3_4vss_uEZgW2_Xh7",
+    ),
+    "polycrystal_2D_WS2": (
+        "polycrystal_2D_WS2.h5",
+        "1AWB3-UTPiTR9dgrEkNFD7EJYsKnbEy0y",
+    ),
+    "WS2": (
+        "WS2.cif",
+        "13zBl6aFExtsz_sew-L0-_ALYJfcgHKjo",
+    ),
+    "small_AuAgPd_wire_dataset_04": (
+        "small_AuAgPd_wire_dataset_04.h5",
+        "1OQYW0H6VELsmnLTcwicP88vo2V5E3Oyt",
+    ),
+    "downsampled_AuAgPd_wire_probe": (
+        "downsampled_AuAgPd_wire_probe.h5",
+        "17OduUKpxVBDumSK_VHtnc2XKkaFVN8kq",
+    ),
+    "ptycho_gold_data": (
+        "ptycho_gold_data.h5",
+        "1KYxE-RbPIXm7A_BCb0V85NnuOWGufHE1",
+    ),
+    "ptycho_gold_probe": (
+        "ptycho_gold_probe.h5",
+        "15AuJoEDeb8HXnUyhJqq7jNEfErKgPr7p",
+    ),
+    "ptycho_MoS2_bin2": (
+        "ptycho_MoS2_bin2.h5",
+        "1C3tXV5BXz0JXbmyu3wTu3NutuIYYsN8A",
+    ),
+    "ptycho_Si-110_18nm": (
+        "ptycho_Si-110_18nm.h5",
+        "19NiTlzHFN8CJFbgUKFahLIytwwqijQgp",
+    ),
+    "ptycho_Si-110_28nm": (
+        "ptycho_Si-110_28nm.h5",
+        "1-jE77b86TH-3ISr5615prRLQA-bBHWvY",
+    ),
+    "ptycho_Si-110_37nm": (
+        "ptycho_Si-110_37nm.h5",
+        "1z9MJUN4NakdkAJpKMgb5qlR9jLOmKP3s",
+    ),
+    "ptycho_STO-110_mixed-state": (
+        "ptycho_STO-110_mixed-state.h5",
+        "1q-bDqxiHCXsITxMxS7X63B1sQtbgMyL2",
+    ),
+    "double_walled_cnt_m90-p90_6deg": (
+        "double_walled_cnt_m90-p90_6deg.h5",
+        "1Zq0u9lw0MaIlZaANcfIq8eIX6qKb2ecH",
+    ),
+    "downsample_Si_SiGe_exp": (
+        "downsample_Si_SiGe_exp.h5",
+        "1fXNYSGpe6w6E9RBA-Ai_owZwoj3w8PNC",
+    ),
+    "downsample_Si_SiGe_probe": (
+        "downsample_Si_SiGe_probe.h5",
+        "141Tv0YF7c5a-MCrh3CkY_w4FgWtBih80",
+    ),
+    "Si_SiGe_EELS_strain": (
+        "Si_SiGe_EELS_strain.mat",
+        "1klkecq8IuEOYB-bXchO7RqOcgCl4bmDJ",
+    ),
+    "Particle_1_Stack_1_45x90_ss30nm_0p09s_spot8_alpha=0p48_bin2_cl-600mm_300kV_bin8": (
+        "Particle_1_Stack_1_45x90_ss30nm_0p09s_spot8_alpha=0p48_bin2_cl-600mm_300kV_bin8.h5",
+        "1uYB23czoa7U05CtHVx9zfiVQFjiPfJUy",
+    ),
+}
+### update the file_ids dict ###
+# best for single combo of dicts
+# file_ids.update(notebook_file_ids)
+# best for multiple combo of dicts
+file_ids = dict(
+    chain(file_ids.items(), notebook_file_ids.items())
+)  # can't replace dict with {}
 # collections of files
 collection_ids = {
     "tutorials": (
@@ -163,6 +308,7 @@ collection_ids = {
     ),
     "test_braggvectors": ("Au_sim",),
     "strain": ("test_strain",),
+    "notebooks": tuple(notebook_file_ids.keys()),  # can't replace tuple with ()
 }
 
 
