@@ -42,6 +42,7 @@ setup(
         "threadpoolctl >= 3.1.0",
         "pylops >= 2.1.0",
         "colorspacious >= 1.1.2",
+        "rich >= 13.7.0",
     ],
     extras_require={
         "ipyparallel": ["ipyparallel >= 6.2.4", "dill >= 0.3.3"],

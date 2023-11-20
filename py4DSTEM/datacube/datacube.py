@@ -1326,3 +1326,25 @@ class DataCube(
             qr = np.hypot(self.qxx_raw - vects.qx[idx], self.qyy_raw - vects.qy[idx])
             mask = np.logical_and(mask, qr > radius)
         return mask
+
+    @classmethod
+    def inspect(
+        self,
+        methods: bool = True,
+    ) -> None:
+        """
+        Inspect the properties and optionally the methods of the DataCube object
+
+        Parameters
+        ----------
+        methods : bool, optional
+            Whether to inspect callable attributes (default: True).
+
+        Returns
+        -------
+        None
+        """
+
+        import rich
+
+        rich.inspect(self, methods=methods, help=help)
