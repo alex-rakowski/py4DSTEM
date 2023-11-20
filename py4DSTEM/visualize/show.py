@@ -77,7 +77,7 @@ def show(
     title=None,
     show_fft=False,
     show_cbar=False,
-    **kwargs
+    **kwargs,
 ):
     """
     General visualization function for 2D arrays.

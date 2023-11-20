@@ -718,7 +718,7 @@ def show_complex(
     pixelunits="pixels",
     pixelsize=1,
     returnfig=False,
-    **kwargs
+    **kwargs,
 ):
     """
     Function to plot complex arrays
