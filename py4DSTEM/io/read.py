@@ -4,6 +4,8 @@ import warnings
 from os.path import exists
 from pathlib import Path
 from typing import Optional, Union
+from tkinter import Tk
+from tkinter.filedialog import askopenfilename
 
 import emdfile as emd
 import py4DSTEM.io.legacy as legacy
@@ -12,7 +14,7 @@ from py4DSTEM.io.parsefiletype import _parse_filetype
 
 
 def read(
-    filepath: Union[str, Path],
+    filepath: Optional[Union[str, Path]] = None,
     datapath: Optional[str] = None,
     tree: Optional[Union[bool, str]] = True,
     verbose: Optional[bool] = False,
@@ -62,12 +64,21 @@ def read(
         (the data)
     """
 
-    # parse filetype
+    if filepath is None:
+        try:
+            root = Tk()
+            root.withdraw()
+            filepath = askopenfilename()
+        except Exception as e:
+            raise Exception(
+                "unable to launch GUI file selector, pass filepath manually"
+            ) from e
+
     er1 = f"filepath must be a string or Path, not {type(filepath)}"
     er2 = f"specified filepath '{filepath}' does not exist"
-    assert isinstance(filepath, (str, Path)), er1
-    assert exists(filepath), er2
-
+    assert isinstance(filepath, (str, Path, None)), er1
+    assert exists(filepath) or filepath is None, er2
+    # parse filetype
     filetype = _parse_filetype(filepath)
     assert filetype in (
         "emd",

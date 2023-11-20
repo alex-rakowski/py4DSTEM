@@ -1,8 +1,18 @@
 from emdfile import save as _save
 import warnings
+from typing import Union, Optional
+from pathlib import Path
+from tkinter import Tk
+from tkinter.filedialog import asksaveasfilename
 
 
-def save(filepath, data, mode="w", emdpath=None, tree=True):
+def save(
+    filepath: Optional[Union[str, Path]] = None,
+    data=None,
+    mode: str = "w",
+    emdpath=None,
+    tree: bool = True,
+):
     """
     Saves data to an EMD 1.0 formatted HDF5 file at filepath.
 
@@ -11,6 +21,18 @@ def save(filepath, data, mode="w", emdpath=None, tree=True):
     # This function wraps emdfile's save and adds a small piece
     # of metadata to the calibration to allow linking to calibrated
     # data items on read
+    if data is None:
+        raise ValueError("No Data passed to be saved")
+
+    if filepath is None:
+        try:
+            root = Tk()
+            root.withdraw()
+            filepath = asksaveasfilename()
+        except Exception as e:
+            raise Exception(
+                "unable to launch GUI file selector, pass filepath manually"
+            ) from e
 
     cal = None
     with warnings.catch_warnings():
