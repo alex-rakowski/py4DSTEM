@@ -427,7 +427,7 @@ class SyntheticDiskLattice(WPFModel):
         x0: float = 0.0,
         y0: float = 0.0,
         exclude_indices: list = [],
-        include_indices: list = None,
+        include_indices: Optional[list] = None,
         name="Synthetic Disk Lattice",
         verbose=False,
     ):
@@ -685,13 +685,13 @@ class SyntheticDiskMoire(WPFModel):
         lattice_a: SyntheticDiskLattice,
         lattice_b: SyntheticDiskLattice,
         intensity_0: float,
-        decorated_peaks: list = None,
+        decorated_peaks: Optional[list] = None,
         link_moire_disk_intensities: bool = False,
         link_disk_parameters: bool = True,
         refine_width: bool = True,
-        edge_width: list = None,
+        edge_width: Optional[list] = None,
         refine_radius: bool = True,
-        disk_radius: list = None,
+        disk_radius: Optional[list] = None,
         name: str = "Moire Lattice",
     ):
         # ensure both models share the same center coordinate

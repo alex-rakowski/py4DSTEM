@@ -12,11 +12,12 @@ from matplotlib.colors import rgb_to_hsv
 from matplotlib.colors import ListedColormap
 
 from emdfile import tqdmnd, PointList, PointListArray
+from typing import Optional
 
 
 def make_orientation_histogram(
-    bragg_peaks: PointListArray = None,
-    radial_ranges: np.ndarray = None,
+    bragg_peaks: Optional[PointListArray] = None,
+    radial_ranges: Optional[np.ndarray] = None,
     orientation_map=None,
     orientation_ind: int = 0,
     orientation_growth_angles: np.array = 0.0,

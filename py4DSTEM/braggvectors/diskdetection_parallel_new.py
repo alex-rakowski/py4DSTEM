@@ -20,6 +20,7 @@ import distributed
 import py4DSTEM
 from emdfile import PointListArray, PointList
 from py4DSTEM.braggvectors.diskdetection import _find_Bragg_disks_single_DP_FK
+from typing import Optional
 
 
 #### SERIALISERS ####
@@ -95,7 +96,7 @@ def beta_parallel_disk_detection(
     # qymax=None,
     probe_type="FT",
     dask_client=None,
-    dask_client_params: dict = None,
+    dask_client_params: Optional[dict] = None,
     restart_dask_client=True,
     close_dask_client=False,
     return_dask_client=True,

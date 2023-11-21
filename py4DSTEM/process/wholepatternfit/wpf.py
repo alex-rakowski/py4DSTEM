@@ -303,7 +303,7 @@ class WholePatternFit:
         real_space_mask: Optional[np.ndarray] = None,
         show_fit_metrics: bool = True,
         distributed: bool = True,
-        num_jobs: int = None,
+        num_jobs: Optional[int] = None,
         threads_per_job: int = 1,
         **fit_opts,
     ):

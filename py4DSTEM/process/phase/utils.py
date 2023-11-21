@@ -1,5 +1,5 @@
 import functools
-from typing import Mapping, Tuple, Union
+from typing import Optional, Mapping, Tuple, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -88,13 +88,13 @@ class ComplexProbe:
         sampling: Tuple[float, float],
         semiangle_cutoff: float = np.inf,
         rolloff: float = 2.0,
-        vacuum_probe_intensity: np.ndarray = None,
+        vacuum_probe_intensity: Optional[np.ndarray] = None,
         device: str = "cpu",
         focal_spread: float = 0.0,
         angular_spread: float = 0.0,
         gaussian_spread: float = 0.0,
         phase_shift: float = 0.0,
-        parameters: Mapping[str, float] = None,
+        parameters: Optional[Mapping[str, float]] = None,
         **kwargs,
     ):
         if device == "cpu":
@@ -155,7 +155,7 @@ class ComplexProbe:
         return parameters
 
     def evaluate_aperture(
-        self, alpha: Union[float, np.ndarray], phi: Union[float, np.ndarray] = None
+        self, alpha: Union[float, np.ndarray], phi: Optional[Union[float, np.ndarray]] = None
     ) -> Union[float, np.ndarray]:
         xp = self._xp
         semiangle_cutoff = self._semiangle_cutoff / 1000
@@ -538,7 +538,7 @@ def fft_shift(array, positions, xp=np):
 
 
 def subdivide_into_batches(
-    num_items: int, num_batches: int = None, max_batch: int = None
+    num_items: int, num_batches: Optional[int] = None, max_batch: Optional[int] = None
 ):
     """
     Split an n integer into m (almost) equal integers, such that the sum of smaller integers equals n.
@@ -581,7 +581,7 @@ def subdivide_into_batches(
 
 
 def generate_batches(
-    num_items: int, num_batches: int = None, max_batch: int = None, start=0
+    num_items: int, num_batches: Optional[int] = None, max_batch: Optional[int] = None, start=0
 ):
     for batch in subdivide_into_batches(num_items, num_batches, max_batch):
         end = start + batch

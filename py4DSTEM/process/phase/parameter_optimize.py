@@ -1,5 +1,5 @@
 from functools import partial
-from typing import Callable, Union
+from typing import Optional, Callable, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -527,8 +527,8 @@ class OptimizationParameter:
     def __init__(
         self,
         initial_value: Union[float, int, bool],
-        lower_bound: Union[float, int, bool] = None,
-        upper_bound: Union[float, int, bool] = None,
+        lower_bound: Optional[Union[float, int, bool]] = None,
+        upper_bound: Optional[Union[float, int, bool]] = None,
         scaling: str = "uniform",
         space: str = "real",
         categories: list = [],

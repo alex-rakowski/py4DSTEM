@@ -10,6 +10,7 @@ from matplotlib.gridspec import GridSpec
 from mpl_toolkits.axes_grid1 import ImageGrid
 from py4DSTEM.visualize import return_scaled_histogram_ordering, show, show_complex
 from scipy.ndimage import rotate
+from typing import Optional
 
 try:
     import cupy as cp
@@ -60,7 +61,7 @@ class PhaseReconstruction(Custom):
         self._datacube = datacube
         return self
 
-    def reinitialize_parameters(self, device: str = None, verbose: bool = None):
+    def reinitialize_parameters(self, device: Optional[str] = None, verbose: Optional[bool] = None):
         """
         Reinitializes common parameters. This is useful when loading a previously-saved
         reconstruction (which set device='cpu' and verbose=True for compatibility) ,
@@ -275,9 +276,9 @@ class PhaseReconstruction(Custom):
         self,
         datacube: DataCube,
         require_calibrations: bool = False,
-        force_scan_sampling: float = None,
-        force_angular_sampling: float = None,
-        force_reciprocal_sampling: float = None,
+        force_scan_sampling: Optional[float] = None,
+        force_angular_sampling: Optional[float] = None,
+        force_reciprocal_sampling: Optional[float] = None,
     ):
         """
         Method to extract intensities and calibrations from datacube.
@@ -463,10 +464,10 @@ class PhaseReconstruction(Custom):
     def _calculate_intensities_center_of_mass(
         self,
         intensities: np.ndarray,
-        dp_mask: np.ndarray = None,
+        dp_mask: Optional[np.ndarray] = None,
         fit_function: str = "plane",
-        com_shifts: np.ndarray = None,
-        com_measured: np.ndarray = None,
+        com_shifts: Optional[np.ndarray] = None,
+        com_measured: Optional[np.ndarray] = None,
     ):
         """
         Common preprocessing function to compute and fit diffraction intensities CoM
@@ -578,8 +579,8 @@ class PhaseReconstruction(Custom):
         plot_rotation: bool = True,
         plot_center_of_mass: str = "default",
         maximize_divergence: bool = False,
-        force_com_rotation: float = None,
-        force_com_transpose: bool = None,
+        force_com_rotation: Optional[float] = None,
+        force_com_transpose: Optional[bool] = None,
         **kwargs,
     ):
         """
