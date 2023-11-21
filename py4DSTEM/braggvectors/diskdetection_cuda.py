@@ -4,9 +4,12 @@ Functions for finding Braggdisks using cupy
 """
 
 import numpy as np
-import cupy as cp
-from cupyx.scipy.ndimage import gaussian_filter
-import cupyx.scipy.fft as cufft
+try:
+    from cupyx.scipy.ndimage import gaussian_filter
+    import cupy as cp
+    import cupyx.scipy.fft as cufft
+except Exception:
+    pass
 from time import time
 import numba
 

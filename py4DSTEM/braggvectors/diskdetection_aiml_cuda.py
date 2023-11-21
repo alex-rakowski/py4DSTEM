@@ -28,9 +28,10 @@ except:
         + "https://www.tensorflow.org/install"
         + "for more information"
     )
-
-from cupyx.scipy.ndimage import gaussian_filter
-
+try:
+    from cupyx.scipy.ndimage import gaussian_filter
+except Exception as e:
+    pass
 
 def find_Bragg_disks_aiml_CUDA(
     datacube,

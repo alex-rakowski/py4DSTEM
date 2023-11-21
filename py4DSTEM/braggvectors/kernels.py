@@ -1,4 +1,7 @@
-import cupy as cp
+try:
+    import cupy as cp
+except Exception:
+    pass
 
 __all__ = ["kernels"]
 
