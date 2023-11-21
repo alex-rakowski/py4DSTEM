@@ -24,7 +24,7 @@ from scipy.special import comb
 
 try:
     import cupy as cp
-except (ImportError,ModuleNotFoundError):
+except (ImportError,ModuleNotFoundError,Exception):
     cp = np
 
 warnings.simplefilter(action="always", category=UserWarning)

@@ -6,7 +6,7 @@ from py4DSTEM.process.utils.multicorr import upsampled_correlation
 
 try:
     import cupy as cp
-except (ImportError,ModuleNotFoundError):
+except (ImportError,ModuleNotFoundError,Exception):
     cp = np
 
 

@@ -15,7 +15,7 @@ import numpy as np
 
 try:
     import cupy as cp
-except (ImportError,ModuleNotFoundError):
+except (ImportError,ModuleNotFoundError,Exception):
     cp = np
 
 
