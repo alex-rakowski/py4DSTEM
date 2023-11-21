@@ -4,16 +4,16 @@ from typing import Mapping, Tuple, Union
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.optimize import curve_fit
+import sys
+IN_COLAB = 'google.colab' in sys.modules
+if IN_COLAB is False:
+    try:
+        import cupy as cp
+        from cupyx.scipy.fft import rfft
+    except (ImportError, ModuleNotFoundError,Exception):
+        cp = None
+        from scipy.fft import dstn, idstn
 
-try:
-    import cupy as cp
-    from cupyx.scipy.fft import rfft
-except (ImportError, ModuleNotFoundError,Exception):
-    cp = None
-    from scipy.fft import dstn, idstn
-else:
-    cp = None
-    from scipy.fft import dstn, idstn
 
 from py4DSTEM.process.utils import get_CoM
 from py4DSTEM.process.utils.cross_correlate import align_and_shift_images

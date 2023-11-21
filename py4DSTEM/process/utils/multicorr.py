@@ -12,13 +12,14 @@ modified by SEZ, May 2019 to integrate with py4DSTEM utility functions
 """
 
 import numpy as np
+import sys
+IN_COLAB = 'google.colab' in sys.modules
+if IN_COLAB is False:
+    try:
+        import cupy as cp
+    except (ImportError,ModuleNotFoundError,Exception):
+        cp = np
 
-try:
-    import cupy as cp
-except (ImportError,ModuleNotFoundError,Exception):
-    cp = np
-else:
-    cp = np
 
 
 def upsampled_correlation(imageCorr, upsampleFactor, xyShift, device="cpu"):

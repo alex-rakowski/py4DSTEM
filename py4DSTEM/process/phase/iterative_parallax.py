@@ -21,13 +21,13 @@ from py4DSTEM.visualize import show
 from scipy.linalg import polar
 from scipy.optimize import minimize
 from scipy.special import comb
-
-try:
-    import cupy as cp
-except (ImportError,ModuleNotFoundError,Exception):
-    cp = np
-else:
-    cp = np
+import sys
+IN_COLAB = 'google.colab' in sys.modules
+if IN_COLAB is False:
+    try:
+        import cupy as cp
+    except (ImportError,ModuleNotFoundError,Exception):
+        cp = np
 
 warnings.simplefilter(action="always", category=UserWarning)
 

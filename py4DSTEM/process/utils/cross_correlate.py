@@ -3,13 +3,13 @@
 import numpy as np
 from py4DSTEM.preprocess.utils import get_shifted_ar
 from py4DSTEM.process.utils.multicorr import upsampled_correlation
-
-try:
-    import cupy as cp
-except (ImportError,ModuleNotFoundError,Exception):
-    cp = np
-else:
-    cp = np
+import sys
+IN_COLAB = 'google.colab' in sys.modules
+if IN_COLAB is False:
+    try:
+        import cupy as cp
+    except (ImportError,ModuleNotFoundError,Exception):
+        cp = np
 
 
 def get_cross_correlation(ar, template, corrPower=1, _returnval="real"):

@@ -12,15 +12,17 @@ from emdfile import PointList, PointListArray
 from py4DSTEM.data import QPoints
 from py4DSTEM.braggvectors.kernels import kernels
 from py4DSTEM.braggvectors.diskdetection_aiml import _get_latest_model
+import sys
+
 
 # from py4DSTEM.braggvectors.diskdetection import universal_threshold
+IN_COLAB = 'google.colab' in sys.modules
+if IN_COLAB is False:
+    try:
+        import cupy as cp
+    except (ImportError,ModuleNotFoundError,Exception):
+        cp = np
 
-try:
-    import cupy as cp
-except (ImportError,ModuleNotFoundError,Exception):
-    cp = np
-else:
-    cp = np
 
 try:
     import tensorflow as tf
@@ -30,12 +32,11 @@ except:
         + "https://www.tensorflow.org/install"
         + "for more information"
     )
-try:
-    from cupyx.scipy.ndimage import gaussian_filter
-except (ModuleNotFoundError,ImportError,Exception) as e:
-    pass
-else:
-    pass
+if IN_COLAB is False:
+    try:
+        from cupyx.scipy.ndimage import gaussian_filter
+    except (ModuleNotFoundError,ImportError,Exception) as e:
+        pass
 
 def find_Bragg_disks_aiml_CUDA(
     datacube,

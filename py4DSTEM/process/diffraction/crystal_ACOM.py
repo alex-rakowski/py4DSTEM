@@ -11,13 +11,14 @@ from py4DSTEM.process.utils import electron_wavelength_angstrom
 from warnings import warn
 
 from numpy.linalg import lstsq
+import sys
+IN_COLAB = 'google.colab' in sys.modules
+if IN_COLAB is False:
+    try:
+        import cupy as cp
+    except (ImportError,ModuleNotFoundError):
+        cp = None
 
-try:
-    import cupy as cp
-except (ImportError,ModuleNotFoundError):
-    cp = None
-else:
-    cp = None
 
 
 def orientation_plan(

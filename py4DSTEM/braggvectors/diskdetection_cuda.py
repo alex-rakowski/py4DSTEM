@@ -2,16 +2,17 @@
 Functions for finding Braggdisks using cupy
 
 """
-
+import sys
 import numpy as np
-try:
-    from cupyx.scipy.ndimage import gaussian_filter
-    import cupy as cp
-    import cupyx.scipy.fft as cufft
-except (Exception,ModuleNotFoundError,ImportError):
-    pass
-else:
-    pass
+IN_COLAB = 'google.colab' in sys.modules
+if IN_COLAB:
+    try:
+        from cupyx.scipy.ndimage import gaussian_filter
+        import cupy as cp
+        import cupyx.scipy.fft as cufft
+    except (Exception,ModuleNotFoundError,ImportError):
+        pass
+
 from time import time
 import numba
 

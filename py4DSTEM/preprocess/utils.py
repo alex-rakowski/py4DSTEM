@@ -2,13 +2,14 @@
 
 import numpy as np
 from scipy.ndimage import gaussian_filter
+import sys
+IN_COLAB = 'google.colab' in sys.modules
+if IN_COLAB is False:
+    try:
+        import cupy as cp
+    except (ImportError,ModuleNotFoundError,Exception):
+        cp = np
 
-try:
-    import cupy as cp
-except (ImportError,ModuleNotFoundError,Exception):
-    cp = np
-else:
-    pass
 
 def bin2D(array, factor, dtype=np.float64):
     """
