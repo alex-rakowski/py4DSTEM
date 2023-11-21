@@ -1,4 +1,5 @@
 # Defines the DataCube class, which stores 4D-STEM datacubes
+from __future__ import annotations
 
 import numpy as np
 from scipy.interpolate import interp1d
@@ -10,7 +11,6 @@ from scipy.ndimage import (
     gaussian_filter1d,
     gaussian_filter,
 )
-from typing import Optional, Union
 
 from emdfile import Array, Metadata, Node, Root, tqdmnd
 from py4DSTEM.data import Data, Calibration
@@ -31,9 +31,9 @@ class DataCube(
     def __init__(
         self,
         data: np.ndarray,
-        name: Optional[str] = "datacube",
-        slicelabels: Optional[Union[bool, list]] = None,
-        calibration: Optional[Union[Calibration, None]] = None,
+        name: str | None = "datacube",
+        slicelabels: bool | list | None = None,
+        calibration: Calibration | None | None = None,
     ):
         """
         Accepts:

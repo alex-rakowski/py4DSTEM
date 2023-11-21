@@ -2,9 +2,9 @@
 Module for reconstructing virtual parallax (also known as tilted-shifted bright field)
 images by aligning each virtual BF image.
 """
+from __future__ import annotations
 
 import warnings
-from typing import Optional, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -69,9 +69,9 @@ class ParallaxReconstruction(PhaseReconstruction):
     def __init__(
         self,
         energy: float,
-        datacube: Optional[DataCube] = None,
+        datacube: DataCube | None = None,
         verbose: bool = False,
-        object_padding_px: Tuple[int, int] = (32, 32),
+        object_padding_px: tuple[int, int] = (32, 32),
         device: str = "cpu",
         name: str = "parallax_reconstruction",
     ):
@@ -256,8 +256,8 @@ class ParallaxReconstruction(PhaseReconstruction):
         normalize_images: bool = True,
         normalize_order=0,
         descan_correct: bool = True,
-        defocus_guess: Optional[float] = None,
-        rotation_guess: Optional[float] = None,
+        defocus_guess: float | None = None,
+        rotation_guess: float | None = None,
         plot_average_bf: bool = True,
         **kwargs,
     ):
@@ -776,17 +776,17 @@ class ParallaxReconstruction(PhaseReconstruction):
 
     def reconstruct(
         self,
-        max_alignment_bin: Optional[int] = None,
+        max_alignment_bin: int | None = None,
         min_alignment_bin: int = 1,
         max_iter_at_min_bin: int = 2,
         cross_correlation_upsample_factor: int = 8,
-        regularizer_matrix_size: Tuple[int, int] = (1, 1),
+        regularizer_matrix_size: tuple[int, int] = (1, 1),
         regularize_shifts: bool = True,
         running_average: bool = True,
         progress_bar: bool = True,
         plot_aligned_bf: bool = True,
         plot_convergence: bool = True,
-        reset: Optional[bool] = None,
+        reset: bool | None = None,
         **kwargs,
     ):
         """
@@ -1329,8 +1329,8 @@ class ParallaxReconstruction(PhaseReconstruction):
         fit_aberrations_min_angular_order: int = 0,
         fit_max_thon_rings: int = 6,
         fit_power_alpha: float = 2.0,
-        plot_CTF_comparison: Optional[bool] = None,
-        plot_BF_shifts_comparison: Optional[bool] = None,
+        plot_CTF_comparison: bool | None = None,
+        plot_BF_shifts_comparison: bool | None = None,
         upsampled: bool = True,
         force_transpose: bool = False,
     ):
@@ -1913,7 +1913,7 @@ class ParallaxReconstruction(PhaseReconstruction):
         self,
         use_CTF_fit=None,
         plot_corrected_phase: bool = True,
-        k_info_limit: Optional[float] = None,
+        k_info_limit: float | None = None,
         k_info_power: float = 1.0,
         Wiener_filter=False,
         Wiener_signal_noise_ratio: float = 1.0,
@@ -2069,7 +2069,7 @@ class ParallaxReconstruction(PhaseReconstruction):
         self,
         depth_angstroms=np.arange(-250, 260, 100),
         plot_depth_sections=True,
-        k_info_limit: Optional[float] = None,
+        k_info_limit: float | None = None,
         k_info_power: float = 1.0,
         progress_bar=True,
         **kwargs,

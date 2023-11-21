@@ -1,9 +1,9 @@
 # Defines the DiffractionSlice class, which stores 2(+1)D,
 # diffraction-shaped data
+from __future__ import annotations
 
 from py4DSTEM.io.legacy.legacy13.v13_emd_classes.array import Array
 
-from typing import Optional, Union
 import numpy as np
 import h5py
 
@@ -16,8 +16,8 @@ class DiffractionSlice(Array):
     def __init__(
         self,
         data: np.ndarray,
-        name: Optional[str] = "diffractionslice",
-        slicelabels: Optional[Union[bool, list]] = None,
+        name: str | None = "diffractionslice",
+        slicelabels: bool | list | None = None,
     ):
         """
         Accepts:

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -13,7 +15,6 @@ from py4DSTEM.process.fit import (
     polar_twofold_gaussian_2D,
     polar_twofold_gaussian_2D_background,
 )
-from typing import Optional
 
 
 def find_peaks_single_pattern(
@@ -1178,7 +1179,7 @@ def plot_radial_background(
 
 def make_orientation_histogram(
     self,
-    radial_ranges: Optional[np.ndarray] = None,
+    radial_ranges: np.ndarray | None = None,
     orientation_flip_sign: bool = False,
     orientation_offset_degrees: float = 0.0,
     orientation_separate_bins: bool = False,
@@ -1186,7 +1187,7 @@ def make_orientation_histogram(
     use_refined_peaks=True,
     use_peak_sigma=False,
     peak_sigma_samples=6,
-    theta_step_deg: Optional[float] = None,
+    theta_step_deg: float | None = None,
     sigma_x: float = 1.0,
     sigma_y: float = 1.0,
     sigma_theta: float = 3.0,

@@ -1,6 +1,6 @@
 # Defines the Calibration class, which stores calibration metadata
+from __future__ import annotations
 
-from typing import Optional
 from py4DSTEM.io.legacy.legacy13.v13_emd_classes.metadata import Metadata
 
 
@@ -9,7 +9,7 @@ class Calibration(Metadata):
 
     def __init__(
         self,
-        name: Optional[str] = "calibration",
+        name: str | None = "calibration",
     ):
         """
         Args:

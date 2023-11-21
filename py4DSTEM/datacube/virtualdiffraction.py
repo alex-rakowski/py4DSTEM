@@ -1,9 +1,9 @@
 # Virtual diffraction from a self. Includes:
 #  * VirtualDiffraction - a container for virtual diffraction data + metadata
 #  * DataCubeVirtualDiffraction - methods inherited by DataCube for virt diffraction
+from __future__ import annotations
 
 import numpy as np
-from typing import Optional
 import inspect
 
 from emdfile import tqdmnd, Metadata
@@ -22,7 +22,7 @@ class VirtualDiffraction(DiffractionSlice, Data):
     def __init__(
         self,
         data: np.ndarray,
-        name: Optional[str] = "virtualdiffraction",
+        name: str | None = "virtualdiffraction",
     ):
         """
         Args:

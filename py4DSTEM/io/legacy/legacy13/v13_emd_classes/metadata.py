@@ -1,6 +1,7 @@
+from __future__ import annotations
+
 import numpy as np
 from numbers import Number
-from typing import Optional
 import h5py
 
 from py4DSTEM.io.legacy.legacy13.v13_emd_classes.tree import Tree
@@ -18,7 +19,7 @@ class Metadata:
     If the parameter has not been set, the getter methods return None.
     """
 
-    def __init__(self, name: Optional[str] = "metadata"):
+    def __init__(self, name: str | None = "metadata"):
         """
         Args:
            name (Optional, string):

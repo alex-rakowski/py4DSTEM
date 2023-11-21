@@ -1,4 +1,5 @@
-from typing import Optional
+from __future__ import annotations
+
 from enum import Flag, auto
 import numpy as np
 
@@ -65,8 +66,8 @@ class Parameter:
     def __init__(
         self,
         initial_value,
-        lower_bound: Optional[float] = None,
-        upper_bound: Optional[float] = None,
+        lower_bound: float | None = None,
+        upper_bound: float | None = None,
     ):
         """
         Object representing a fitting parameter with bounds.
@@ -427,7 +428,7 @@ class SyntheticDiskLattice(WPFModel):
         x0: float = 0.0,
         y0: float = 0.0,
         exclude_indices: list = [],
-        include_indices: Optional[list] = None,
+        include_indices: list | None = None,
         name="Synthetic Disk Lattice",
         verbose=False,
     ):
@@ -685,13 +686,13 @@ class SyntheticDiskMoire(WPFModel):
         lattice_a: SyntheticDiskLattice,
         lattice_b: SyntheticDiskLattice,
         intensity_0: float,
-        decorated_peaks: Optional[list] = None,
+        decorated_peaks: list | None = None,
         link_moire_disk_intensities: bool = False,
         link_disk_parameters: bool = True,
         refine_width: bool = True,
-        edge_width: Optional[list] = None,
+        edge_width: list | None = None,
         refine_radius: bool = True,
-        disk_radius: Optional[list] = None,
+        disk_radius: list | None = None,
         name: str = "Moire Lattice",
     ):
         # ensure both models share the same center coordinate

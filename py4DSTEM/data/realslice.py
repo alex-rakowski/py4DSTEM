@@ -1,9 +1,9 @@
 # Defines the RealSlice class, which stores 2(+1)D real-space shaped data
+from __future__ import annotations
 
 from emdfile import Array
 from py4DSTEM.data import Data
 
-from typing import Optional, Union
 import numpy as np
 
 
@@ -15,9 +15,9 @@ class RealSlice(Array, Data):
     def __init__(
         self,
         data: np.ndarray,
-        name: Optional[str] = "realslice",
-        units: Optional[str] = "intensity",
-        slicelabels: Optional[Union[bool, list]] = None,
+        name: str | None = "realslice",
+        units: str | None = "intensity",
+        slicelabels: bool | list | None = None,
         calibration=None,
     ):
         """

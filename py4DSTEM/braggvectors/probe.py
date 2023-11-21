@@ -1,7 +1,7 @@
 # Defines the Probe class
+from __future__ import annotations
 
 import numpy as np
-from typing import Optional
 from warnings import warn
 
 from py4DSTEM.data import DiffractionSlice, Data
@@ -24,7 +24,7 @@ class Probe(DiffractionSlice, Data):
 
     """
 
-    def __init__(self, data: np.ndarray, name: Optional[str] = "probe"):
+    def __init__(self, data: np.ndarray, name: str | None = "probe"):
         """
         Accepts:
             data (2D or 3D np.ndarray): the vacuum probe, or

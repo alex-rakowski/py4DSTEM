@@ -1,8 +1,8 @@
 # Defines the Calibration class, which stores calibration metadata
+from __future__ import annotations
 
 import numpy as np
 from numbers import Number
-from typing import Optional
 from warnings import warn
 
 from emdfile import Metadata, Root
@@ -182,8 +182,8 @@ class Calibration(Metadata):
 
     def __init__(
         self,
-        name: Optional[str] = "calibration",
-        root: Optional[Root] = None,
+        name: str | None = "calibration",
+        root: Root | None = None,
     ):
         """
         Args:

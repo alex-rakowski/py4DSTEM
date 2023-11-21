@@ -1,10 +1,10 @@
 # Functions for calculating diffraction patterns, matching them to experiments, and creating orientation and phase maps.
+from __future__ import annotations
 
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle
 from fractions import Fraction
-from typing import Union, Optional
 import sys
 
 from emdfile import PointList
@@ -609,19 +609,19 @@ class Crystal:
 
     def generate_diffraction_pattern(
         self,
-        orientation: Optional[Orientation] = None,
-        ind_orientation: Optional[int] = 0,
-        orientation_matrix: Optional[np.ndarray] = None,
-        zone_axis_lattice: Optional[np.ndarray] = None,
-        proj_x_lattice: Optional[np.ndarray] = None,
-        foil_normal_lattice: Optional[Union[list, tuple, np.ndarray]] = None,
-        zone_axis_cartesian: Optional[np.ndarray] = None,
-        proj_x_cartesian: Optional[np.ndarray] = None,
-        foil_normal_cartesian: Optional[Union[list, tuple, np.ndarray]] = None,
+        orientation: Orientation | None = None,
+        ind_orientation: int | None = 0,
+        orientation_matrix: np.ndarray | None = None,
+        zone_axis_lattice: np.ndarray | None = None,
+        proj_x_lattice: np.ndarray | None = None,
+        foil_normal_lattice: list | tuple | np.ndarray | None = None,
+        zone_axis_cartesian: np.ndarray | None = None,
+        proj_x_cartesian: np.ndarray | None = None,
+        foil_normal_cartesian: list | tuple | np.ndarray | None = None,
         sigma_excitation_error: float = 0.02,
         tol_excitation_error_mult: float = 3,
         tol_intensity: float = 1e-4,
-        k_max: Optional[float] = None,
+        k_max: float | None = None,
         keep_qz=False,
         return_orientation_matrix=False,
     ):

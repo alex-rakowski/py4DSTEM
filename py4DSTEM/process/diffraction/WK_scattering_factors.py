@@ -1,10 +1,11 @@
+from __future__ import annotations
+
 import numpy as np
 from scipy.special import expi
 
 # from functools import lru_cache
 
 from py4DSTEM.process.utils import electron_wavelength_angstrom
-from typing import Optional
 
 """
 Weickenmeier-Kohl absorptive scattering factors, adapted by SE Zeltmann from EMsoftLib/others.f90
@@ -16,7 +17,7 @@ def compute_WK_factor(
     g: np.ndarray,
     Z: int,
     accelerating_voltage: float,
-    thermal_sigma: Optional[float] = None,
+    thermal_sigma: float | None = None,
     include_core: bool = True,
     include_phonon: bool = True,
     verbose=False,

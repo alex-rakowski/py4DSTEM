@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 import numpy as np
-from typing import Union, Optional
 from scipy.optimize import curve_fit
 
 from py4DSTEM.process.diffraction.utils import Orientation, calc_1D_profile
@@ -25,7 +26,7 @@ def calibrate_pixel_size(
     set_calibration_in_place=False,
     verbose=True,
     plot_result=False,
-    figsize: Union[list, tuple, np.ndarray] = (12, 6),
+    figsize: list | tuple | np.ndarray = (12, 6),
     returnfig=False,
 ):
     """
@@ -183,7 +184,7 @@ def calibrate_unit_cell(
     fit_all_intensities=True,
     verbose=True,
     plot_result=False,
-    figsize: Union[list, tuple, np.ndarray] = (12, 6),
+    figsize: list | tuple | np.ndarray = (12, 6),
     returnfig=False,
 ):
     """

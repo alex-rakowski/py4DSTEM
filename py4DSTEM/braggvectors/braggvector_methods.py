@@ -1,4 +1,5 @@
 # BraggVectors methods
+from __future__ import annotations
 
 import inspect
 from warnings import warn
@@ -9,7 +10,6 @@ from emdfile import Array, Metadata, _read_metadata, tqdmnd
 from py4DSTEM import show
 from py4DSTEM.datacube import VirtualImage
 from scipy.ndimage import gaussian_filter
-from typing import Optional
 
 
 class BraggVectorMethods:
@@ -799,7 +799,7 @@ class BraggVectorMethods:
         else:
             return
 
-    def to_strainmap(self, name: Optional[str] = None):
+    def to_strainmap(self, name: str | None = None):
         """
         Generate a StrainMap object from the BraggVectors
         equivalent to py4DSTEM.StrainMap(braggvectors=braggvectors)

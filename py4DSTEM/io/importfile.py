@@ -1,8 +1,8 @@
 # Reader functions for non-native file types
+from __future__ import annotations
 
 import pathlib
 from os.path import exists
-from typing import Optional, Union
 
 from py4DSTEM.io.filereaders import (
     load_mib,
@@ -16,10 +16,10 @@ from py4DSTEM.io.parsefiletype import _parse_filetype
 
 
 def import_file(
-    filepath: Union[str, pathlib.Path],
-    mem: Optional[str] = "RAM",
-    binfactor: Optional[int] = 1,
-    filetype: Optional[str] = None,
+    filepath: str | pathlib.Path,
+    mem: str | None = "RAM",
+    binfactor: int | None = 1,
+    filetype: str | None = None,
     **kwargs,
 ):
     """

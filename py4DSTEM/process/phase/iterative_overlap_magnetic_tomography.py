@@ -2,9 +2,10 @@
 Module for reconstructing phase objects from 4DSTEM datasets using iterative methods,
 namely overlap magnetic tomography.
 """
+from __future__ import annotations
 
 import warnings
-from typing import Optional, Mapping, Sequence, Tuple
+from typing import Mapping, Sequence 
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -108,19 +109,19 @@ class OverlapMagneticTomographicReconstruction(PtychographicReconstruction):
         self,
         energy: float,
         num_slices: int,
-        tilt_angles_deg: Sequence[Tuple[float, float]],
-        datacube: Optional[Sequence[DataCube]] = None,
-        semiangle_cutoff: Optional[float] = None,
-        semiangle_cutoff_pixels: Optional[float] = None,
+        tilt_angles_deg: Sequence[tuple[float, float]],
+        datacube: Sequence[DataCube] | None = None,
+        semiangle_cutoff: float | None = None,
+        semiangle_cutoff_pixels: float | None = None,
         rolloff: float = 2.0,
-        vacuum_probe_intensity: Optional[np.ndarray] = None,
-        polar_parameters: Optional[Mapping[str, float]] = None,
-        object_padding_px: Optional[Tuple[int, int]] = None,
+        vacuum_probe_intensity: np.ndarray | None = None,
+        polar_parameters: Mapping[str, float] | None = None,
+        object_padding_px: tuple[int, int] | None = None,
         object_type: str = "potential",
-        positions_mask: Optional[np.ndarray] = None,
-        initial_object_guess: Optional[np.ndarray] = None,
-        initial_probe_guess: Optional[np.ndarray] = None,
-        initial_scan_positions: Optional[Sequence[np.ndarray]] = None,
+        positions_mask: np.ndarray | None = None,
+        initial_object_guess: np.ndarray | None = None,
+        initial_probe_guess: np.ndarray | None = None,
+        initial_scan_positions: Sequence[np.ndarray] | None = None,
         verbose: bool = True,
         device: str = "cpu",
         name: str = "overlap-magnetic-tomographic_reconstruction",
@@ -201,8 +202,8 @@ class OverlapMagneticTomographicReconstruction(PtychographicReconstruction):
 
     def _precompute_propagator_arrays(
         self,
-        gpts: Tuple[int, int],
-        sampling: Tuple[float, float],
+        gpts: tuple[int, int],
+        sampling: tuple[float, float],
         energy: float,
         slice_thicknesses: Sequence[float],
     ):
@@ -427,21 +428,21 @@ class OverlapMagneticTomographicReconstruction(PtychographicReconstruction):
 
     def preprocess(
         self,
-        diffraction_intensities_shape: Optional[Tuple[int, int]] = None,
+        diffraction_intensities_shape: tuple[int, int] | None = None,
         reshaping_method: str = "fourier",
-        probe_roi_shape: Optional[Tuple[int, int]] = None,
-        dp_mask: Optional[np.ndarray] = None,
+        probe_roi_shape: tuple[int, int] | None = None,
+        dp_mask: np.ndarray | None = None,
         fit_function: str = "plane",
         plot_probe_overlaps: bool = True,
-        rotation_real_space_degrees: Optional[float] = None,
-        diffraction_patterns_rotate_degrees: Optional[float] = None,
-        diffraction_patterns_transpose: Optional[bool] = None,
-        force_com_shifts: Optional[Sequence[float]] = None,
+        rotation_real_space_degrees: float | None = None,
+        diffraction_patterns_rotate_degrees: float | None = None,
+        diffraction_patterns_transpose: bool | None = None,
+        force_com_shifts: Sequence[float] | None = None,
         progress_bar: bool = True,
-        force_scan_sampling: Optional[float] = None,
-        force_angular_sampling: Optional[float] = None,
-        force_reciprocal_sampling: Optional[float] = None,
-        object_fov_mask: Optional[np.ndarray] = None,
+        force_scan_sampling: float | None = None,
+        force_angular_sampling: float | None = None,
+        force_reciprocal_sampling: float | None = None,
+        object_fov_mask: np.ndarray | None = None,
         crop_patterns: bool = False,
         **kwargs,
     ):
@@ -2032,11 +2033,11 @@ class OverlapMagneticTomographicReconstruction(PtychographicReconstruction):
         max_iter: int = 64,
         reconstruction_method: str = "gradient-descent",
         reconstruction_parameter: float = 1.0,
-        reconstruction_parameter_a: Optional[float] = None,
-        reconstruction_parameter_b: Optional[float] = None,
-        reconstruction_parameter_c: Optional[float] = None,
-        max_batch_size: Optional[int] = None,
-        seed_random: Optional[int] = None,
+        reconstruction_parameter_a: float | None = None,
+        reconstruction_parameter_b: float | None = None,
+        reconstruction_parameter_c: float | None = None,
+        max_batch_size: int | None = None,
+        seed_random: int | None = None,
         step_size: float = 0.5,
         normalization_min: float = 1,
         positions_step_size: float = 0.9,
@@ -2050,19 +2051,19 @@ class OverlapMagneticTomographicReconstruction(PtychographicReconstruction):
         constrain_probe_fourier_amplitude_max_width_pixels: float = 3.0,
         constrain_probe_fourier_amplitude_constant_intensity: bool = False,
         fix_positions_iter: int = np.inf,
-        constrain_position_distance: Optional[float] = None,
+        constrain_position_distance: float | None = None,
         global_affine_transformation: bool = True,
-        gaussian_filter_sigma_e: Optional[float] = None,
-        gaussian_filter_sigma_m: Optional[float] = None,
+        gaussian_filter_sigma_e: float | None = None,
+        gaussian_filter_sigma_m: float | None = None,
         gaussian_filter_iter: int = np.inf,
         fit_probe_aberrations_iter: int = 0,
         fit_probe_aberrations_max_angular_order: int = 4,
         fit_probe_aberrations_max_radial_order: int = 4,
         butterworth_filter_iter: int = np.inf,
-        q_lowpass_e: Optional[float] = None,
-        q_lowpass_m: Optional[float] = None,
-        q_highpass_e: Optional[float] = None,
-        q_highpass_m: Optional[float] = None,
+        q_lowpass_e: float | None = None,
+        q_lowpass_m: float | None = None,
+        q_highpass_e: float | None = None,
+        q_highpass_m: float | None = None,
         butterworth_order: float = 2,
         object_positivity: bool = True,
         shrinkage_rad: float = 0.0,
@@ -2073,7 +2074,7 @@ class OverlapMagneticTomographicReconstruction(PtychographicReconstruction):
         collective_tilt_updates: bool = False,
         store_iterations: bool = False,
         progress_bar: bool = True,
-        reset: Optional[bool] = None,
+        reset: bool | None = None,
     ):
         """
         Ptychographic reconstruction main method.
@@ -2769,9 +2770,9 @@ class OverlapMagneticTomographicReconstruction(PtychographicReconstruction):
         convergence_ax,
         cbar: bool,
         projection_angle_deg: float,
-        projection_axes: Tuple[int, int],
-        x_lims: Tuple[int, int],
-        y_lims: Tuple[int, int],
+        projection_axes: tuple[int, int],
+        x_lims: tuple[int, int],
+        y_lims: tuple[int, int],
         **kwargs,
     ):
         """
@@ -2851,9 +2852,9 @@ class OverlapMagneticTomographicReconstruction(PtychographicReconstruction):
         cbar: bool,
         plot_convergence: bool,
         projection_angle_deg: float,
-        projection_axes: Tuple[int, int],
-        x_lims: Tuple[int, int],
-        y_lims: Tuple[int, int],
+        projection_axes: tuple[int, int],
+        x_lims: tuple[int, int],
+        y_lims: tuple[int, int],
         **kwargs,
     ):
         """
@@ -3112,11 +3113,11 @@ class OverlapMagneticTomographicReconstruction(PtychographicReconstruction):
         self,
         fig,
         plot_convergence: bool,
-        iterations_grid: Tuple[int, int],
+        iterations_grid: tuple[int, int],
         projection_angle_deg: float,
-        projection_axes: Tuple[int, int],
-        x_lims: Tuple[int, int],
-        y_lims: Tuple[int, int],
+        projection_axes: tuple[int, int],
+        x_lims: tuple[int, int],
+        y_lims: tuple[int, int],
         **kwargs,
     ):
         """
@@ -3147,10 +3148,10 @@ class OverlapMagneticTomographicReconstruction(PtychographicReconstruction):
         self,
         fig=None,
         cbar: bool = True,
-        iterations_grid: Optional[Tuple[int, int]] = None,
+        iterations_grid: tuple[int, int] | None = None,
         plot_convergence: bool = True,
-        projection_angle_deg: Optional[float] = None,
-        projection_axes: Tuple[int, int] = (0, 2),
+        projection_angle_deg: float | None = None,
+        projection_axes: tuple[int, int] = (0, 2),
         x_lims=(None, None),
         y_lims=(None, None),
         **kwargs,
@@ -3212,10 +3213,10 @@ class OverlapMagneticTomographicReconstruction(PtychographicReconstruction):
     def _return_object_fft(
         self,
         obj=None,
-        projection_angle_deg: Optional[float] = None,
-        projection_axes: Tuple[int, int] = (0, 2),
-        x_lims: Tuple[int, int] = (None, None),
-        y_lims: Tuple[int, int] = (None, None),
+        projection_angle_deg: float | None = None,
+        projection_axes: tuple[int, int] = (0, 2),
+        x_lims: tuple[int, int] = (None, None),
+        y_lims: tuple[int, int] = (None, None),
     ):
         """
         Returns obj fft shifted to center of array
@@ -3263,10 +3264,10 @@ class OverlapMagneticTomographicReconstruction(PtychographicReconstruction):
     def show_object_fft(
         self,
         obj=None,
-        projection_angle_deg: Optional[float] = None,
-        projection_axes: Tuple[int, int] = (0, 2),
-        x_lims: Tuple[int, int] = (None, None),
-        y_lims: Tuple[int, int] = (None, None),
+        projection_angle_deg: float | None = None,
+        projection_axes: tuple[int, int] = (0, 2),
+        x_lims: tuple[int, int] = (None, None),
+        y_lims: tuple[int, int] = (None, None),
         **kwargs,
     ):
         """

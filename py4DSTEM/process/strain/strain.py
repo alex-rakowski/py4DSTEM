@@ -1,7 +1,7 @@
 # Defines the Strain class
+from __future__ import annotations
 
 import warnings
-from typing import Optional
 
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle
@@ -36,7 +36,7 @@ class StrainMap(RealSlice, Data):
 
     """
 
-    def __init__(self, braggvectors: BraggVectors, name: Optional[str] = "strainmap"):
+    def __init__(self, braggvectors: BraggVectors, name: str | None = "strainmap"):
         """
         Parameters
         ----------

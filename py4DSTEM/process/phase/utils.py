@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 import functools
-from typing import Optional, Mapping, Tuple, Union
+from typing import Mapping 
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -84,17 +86,17 @@ class ComplexProbe:
     def __init__(
         self,
         energy: float,
-        gpts: Tuple[int, int],
-        sampling: Tuple[float, float],
+        gpts: tuple[int, int],
+        sampling: tuple[float, float],
         semiangle_cutoff: float = np.inf,
         rolloff: float = 2.0,
-        vacuum_probe_intensity: Optional[np.ndarray] = None,
+        vacuum_probe_intensity: np.ndarray | None = None,
         device: str = "cpu",
         focal_spread: float = 0.0,
         angular_spread: float = 0.0,
         gaussian_spread: float = 0.0,
         phase_shift: float = 0.0,
-        parameters: Optional[Mapping[str, float]] = None,
+        parameters: Mapping[str, float] | None = None,
         **kwargs,
     ):
         if device == "cpu":
@@ -155,8 +157,8 @@ class ComplexProbe:
         return parameters
 
     def evaluate_aperture(
-        self, alpha: Union[float, np.ndarray], phi: Optional[Union[float, np.ndarray]] = None
-    ) -> Union[float, np.ndarray]:
+        self, alpha: float | np.ndarray, phi: float | np.ndarray | None = None
+    ) -> float | np.ndarray:
         xp = self._xp
         semiangle_cutoff = self._semiangle_cutoff / 1000
 
@@ -186,24 +188,24 @@ class ComplexProbe:
         return array
 
     def evaluate_temporal_envelope(
-        self, alpha: Union[float, np.ndarray]
-    ) -> Union[float, np.ndarray]:
+        self, alpha: float | np.ndarray
+    ) -> float | np.ndarray:
         xp = self._xp
         return xp.exp(
             -((0.5 * xp.pi / self._wavelength * self._focal_spread * alpha**2) ** 2)
         ).astype(xp.float32)
 
     def evaluate_gaussian_envelope(
-        self, alpha: Union[float, np.ndarray]
-    ) -> Union[float, np.ndarray]:
+        self, alpha: float | np.ndarray
+    ) -> float | np.ndarray:
         xp = self._xp
         return xp.exp(
             -0.5 * self._gaussian_spread**2 * alpha**2 / self._wavelength**2
         )
 
     def evaluate_spatial_envelope(
-        self, alpha: Union[float, np.ndarray], phi: Union[float, np.ndarray]
-    ) -> Union[float, np.ndarray]:
+        self, alpha: float | np.ndarray, phi: float | np.ndarray
+    ) -> float | np.ndarray:
         xp = self._xp
         p = self._parameters
         dchi_dk = (
@@ -285,8 +287,8 @@ class ComplexProbe:
         )
 
     def evaluate_chi(
-        self, alpha: Union[float, np.ndarray], phi: Union[float, np.ndarray]
-    ) -> Union[float, np.ndarray]:
+        self, alpha: float | np.ndarray, phi: float | np.ndarray
+    ) -> float | np.ndarray:
         xp = self._xp
         p = self._parameters
 
@@ -365,14 +367,14 @@ class ComplexProbe:
         return array
 
     def evaluate_aberrations(
-        self, alpha: Union[float, np.ndarray], phi: Union[float, np.ndarray]
-    ) -> Union[float, np.ndarray]:
+        self, alpha: float | np.ndarray, phi: float | np.ndarray
+    ) -> float | np.ndarray:
         xp = self._xp
         return xp.exp(-1.0j * self.evaluate_chi(alpha, phi))
 
     def evaluate(
-        self, alpha: Union[float, np.ndarray], phi: Union[float, np.ndarray]
-    ) -> Union[float, np.ndarray]:
+        self, alpha: float | np.ndarray, phi: float | np.ndarray
+    ) -> float | np.ndarray:
         array = self.evaluate_aberrations(alpha, phi)
 
         if self._semiangle_cutoff < np.inf or self._vacuum_probe_intensity is not None:
@@ -440,7 +442,7 @@ class ComplexProbe:
         return self
 
 
-def spatial_frequencies(gpts: Tuple[int, int], sampling: Tuple[float, float]):
+def spatial_frequencies(gpts: tuple[int, int], sampling: tuple[float, float]):
     """
     Calculate spatial frequencies of a grid.
 
@@ -538,7 +540,7 @@ def fft_shift(array, positions, xp=np):
 
 
 def subdivide_into_batches(
-    num_items: int, num_batches: Optional[int] = None, max_batch: Optional[int] = None
+    num_items: int, num_batches: int | None = None, max_batch: int | None = None
 ):
     """
     Split an n integer into m (almost) equal integers, such that the sum of smaller integers equals n.
@@ -581,7 +583,7 @@ def subdivide_into_batches(
 
 
 def generate_batches(
-    num_items: int, num_batches: Optional[int] = None, max_batch: Optional[int] = None, start=0
+    num_items: int, num_batches: int | None = None, max_batch: int | None = None, start=0
 ):
     for batch in subdivide_into_batches(num_items, num_batches, max_batch):
         end = start + batch
@@ -744,7 +746,7 @@ class AffineTransform:
 def estimate_global_transformation(
     positions0: np.ndarray,
     positions1: np.ndarray,
-    origin: Tuple[int, int] = (0, 0),
+    origin: tuple[int, int] = (0, 0),
     translation_allowed: bool = True,
     xp=np,
 ):
@@ -774,7 +776,7 @@ def estimate_global_transformation(
 def estimate_global_transformation_ransac(
     positions0: np.ndarray,
     positions1: np.ndarray,
-    origin: Tuple[int, int] = (0, 0),
+    origin: tuple[int, int] = (0, 0),
     translation_allowed: bool = True,
     min_sample: int = 64,
     max_error: float = 16,

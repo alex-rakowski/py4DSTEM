@@ -1,8 +1,8 @@
 # Functions for calibrating the pixel size in the diffraction plane.
+from __future__ import annotations
 
 import numpy as np
 from scipy.optimize import leastsq
-from typing import Union, Optional
 
 from emdfile import tqdmnd
 from py4DSTEM.process.utils import get_CoM

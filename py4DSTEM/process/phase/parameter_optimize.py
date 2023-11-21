@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 from functools import partial
-from typing import Optional, Callable, Union
+from typing import Callable 
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -106,7 +108,7 @@ class PtychographyOptimizer:
         self,
         n_calls: int = 50,
         n_initial_points: int = 20,
-        error_metric: Union[Callable, str] = "log",
+        error_metric: Callable | str = "log",
         **skopt_kwargs: dict,
     ):
         """
@@ -332,7 +334,7 @@ class PtychographyOptimizer:
         scan_positions = scan_positions @ affine_transform.asarray()
         return scan_positions
 
-    def _get_error_metric(self, error_metric: Union[Callable, str]) -> Callable:
+    def _get_error_metric(self, error_metric: Callable | str) -> Callable:
         """
         Get error metric as a function, converting builtin method names
         to functions
@@ -526,9 +528,9 @@ class OptimizationParameter:
 
     def __init__(
         self,
-        initial_value: Union[float, int, bool],
-        lower_bound: Optional[Union[float, int, bool]] = None,
-        upper_bound: Optional[Union[float, int, bool]] = None,
+        initial_value: float | int | bool,
+        lower_bound: float | int | bool | None = None,
+        upper_bound: float | int | bool | None = None,
         scaling: str = "uniform",
         space: str = "real",
         categories: list = [],

@@ -3,10 +3,10 @@
 #  * DataCubeVirtualImager - methods inherited by DataCube for virt imaging
 #
 # for bragg virtual imaging methods, goto diskdetection.virtualimage.py
+from __future__ import annotations
 
 import numpy as np
 import dask.array as da
-from typing import Optional
 import inspect
 
 from emdfile import tqdmnd, Metadata
@@ -28,7 +28,7 @@ class VirtualImage(RealSlice, Data):
     def __init__(
         self,
         data: np.ndarray,
-        name: Optional[str] = "virtualimage",
+        name: str | None = "virtualimage",
     ):
         """
         Parameters

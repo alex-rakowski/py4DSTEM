@@ -1,9 +1,9 @@
 # Defines the QPoints class, which stores PointLists with fields 'qx','qy','intensity'
+from __future__ import annotations
 
 from emdfile import PointList
 from py4DSTEM.data import Data
 
-from typing import Optional
 import numpy as np
 
 
@@ -16,7 +16,7 @@ class QPoints(PointList, Data):
     def __init__(
         self,
         data: np.ndarray,
-        name: Optional[str] = "qpoints",
+        name: str | None = "qpoints",
     ):
         """
         Accepts:

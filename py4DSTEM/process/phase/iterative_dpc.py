@@ -2,9 +2,10 @@
 Module for reconstructing phase objects from 4DSTEM datasets using iterative methods,
 namely DPC.
 """
+from __future__ import annotations
 
 import warnings
-from typing import Optional, Sequence, Tuple, Union
+from typing import Sequence 
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -49,9 +50,9 @@ class DPCReconstruction(PhaseReconstruction):
 
     def __init__(
         self,
-        datacube: Optional[DataCube] = None,
-        initial_object_guess: Optional[np.ndarray] = None,
-        energy: Optional[float] = None,
+        datacube: DataCube | None = None,
+        initial_object_guess: np.ndarray | None = None,
+        energy: float | None = None,
         verbose: bool = True,
         device: str = "cpu",
         name: str = "dpc_reconstruction",
@@ -232,15 +233,15 @@ class DPCReconstruction(PhaseReconstruction):
 
     def preprocess(
         self,
-        dp_mask: Optional[np.ndarray] = None,
+        dp_mask: np.ndarray | None = None,
         padding_factor: float = 2,
         rotation_angles_deg: np.ndarray = np.arange(-89.0, 90.0, 1.0),
         maximize_divergence: bool = False,
         fit_function: str = "plane",
-        force_com_rotation: Optional[float] = None,
-        force_com_transpose: Optional[bool] = None,
-        force_com_shifts: Optional[Union[Sequence[np.ndarray], Sequence[float]]] = None,
-        force_com_measured: Optional[Sequence[np.ndarray]] = None,
+        force_com_rotation: float | None = None,
+        force_com_transpose: bool | None = None,
+        force_com_shifts: Sequence[np.ndarray] | Sequence[float] | None = None,
+        force_com_measured: Sequence[np.ndarray] | None = None,
         plot_center_of_mass: str = "default",
         plot_rotation: bool = True,
         **kwargs,
@@ -657,17 +658,17 @@ class DPCReconstruction(PhaseReconstruction):
 
     def reconstruct(
         self,
-        reset: Optional[bool] = None,
+        reset: bool | None = None,
         max_iter: int = 64,
-        step_size: Optional[float] = None,
+        step_size: float | None = None,
         stopping_criterion: float = 1e-6,
         backtrack: bool = True,
         progress_bar: bool = True,
-        gaussian_filter_sigma: Optional[float] = None,
+        gaussian_filter_sigma: float | None = None,
         gaussian_filter_iter: int = np.inf,
         butterworth_filter_iter: int = np.inf,
-        q_lowpass: Optional[float] = None,
-        q_highpass: Optional[float] = None,
+        q_lowpass: float | None = None,
+        q_highpass: float | None = None,
         butterworth_order: float = 2,
         anti_gridding: float = True,
         store_iterations: bool = False,
@@ -889,7 +890,7 @@ class DPCReconstruction(PhaseReconstruction):
         fig,
         cbar: bool,
         plot_convergence: bool,
-        iterations_grid: Tuple[int, int],
+        iterations_grid: tuple[int, int],
         **kwargs,
     ):
         """
@@ -992,7 +993,7 @@ class DPCReconstruction(PhaseReconstruction):
     def visualize(
         self,
         fig=None,
-        iterations_grid: Optional[Tuple[int, int]] = None,
+        iterations_grid: tuple[int, int] | None = None,
         plot_convergence: bool = True,
         cbar: bool = True,
         **kwargs,

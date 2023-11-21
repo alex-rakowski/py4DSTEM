@@ -1,7 +1,7 @@
 # Defines the Array class, which stores any N-dimensional array-like data.
 # Implements the EMD file standard - https://emdatasets.com/format
+from __future__ import annotations
 
-from typing import Optional, Union
 import numpy as np
 import h5py
 from numbers import Number
@@ -101,11 +101,11 @@ class Array:
     def __init__(
         self,
         data: np.ndarray,
-        name: Optional[str] = "array",
-        units: Optional[str] = "",
-        dims: Optional[list] = None,
-        dim_names: Optional[list] = None,
-        dim_units: Optional[list] = None,
+        name: str | None = "array",
+        units: str | None = "",
+        dims: list | None = None,
+        dim_names: list | None = None,
+        dim_units: list | None = None,
         slicelabels=None,
     ):
         """
@@ -322,9 +322,9 @@ class Array:
     def set_dim(
         self,
         n: int,
-        dim: Union[list, np.ndarray],
-        units: Optional[str] = None,
-        name: Optional[str] = None,
+        dim: list | np.ndarray,
+        units: str | None = None,
+        name: str | None = None,
     ):
         """
         Sets the n'th dim vector, using `dim` as described in the Array
