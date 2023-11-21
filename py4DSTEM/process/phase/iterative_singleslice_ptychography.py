@@ -5,7 +5,7 @@ namely (single-slice) ptychography.
 from __future__ import annotations
 
 import warnings
-from typing import Mapping 
+from typing import Mapping
 
 import matplotlib.pyplot as plt
 import numpy as np

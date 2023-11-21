@@ -5,7 +5,7 @@ namely multislice ptychography.
 from __future__ import annotations
 
 import warnings
-from typing import Mapping, Sequence 
+from typing import Mapping, Sequence
 
 import matplotlib.pyplot as plt
 import numpy as np

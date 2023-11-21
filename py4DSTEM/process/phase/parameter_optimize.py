@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from functools import partial
-from typing import Callable 
+from typing import Callable
 
 import matplotlib.pyplot as plt
 import numpy as np

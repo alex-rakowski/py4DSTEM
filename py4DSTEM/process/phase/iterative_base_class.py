@@ -61,7 +61,9 @@ class PhaseReconstruction(Custom):
         self._datacube = datacube
         return self
 
-    def reinitialize_parameters(self, device: str | None = None, verbose: bool | None = None):
+    def reinitialize_parameters(
+        self, device: str | None = None, verbose: bool | None = None
+    ):
         """
         Reinitializes common parameters. This is useful when loading a previously-saved
         reconstruction (which set device='cpu' and verbose=True for compatibility) ,

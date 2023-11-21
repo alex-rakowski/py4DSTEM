@@ -5,7 +5,7 @@ namely DPC.
 from __future__ import annotations
 
 import warnings
-from typing import Sequence 
+from typing import Sequence
 
 import matplotlib.pyplot as plt
 import numpy as np

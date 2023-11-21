@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import functools
-from typing import Mapping 
+from typing import Mapping
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -583,7 +583,10 @@ def subdivide_into_batches(
 
 
 def generate_batches(
-    num_items: int, num_batches: int | None = None, max_batch: int | None = None, start=0
+    num_items: int,
+    num_batches: int | None = None,
+    max_batch: int | None = None,
+    start=0,
 ):
     for batch in subdivide_into_batches(num_items, num_batches, max_batch):
         end = start + batch
