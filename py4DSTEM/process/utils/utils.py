@@ -26,7 +26,8 @@ try:
     import cupy as cp
 except (ImportError,ModuleNotFoundError,Exception):
     cp = np
-
+else:
+    cp = np
 
 def radial_reduction(ar, x0, y0, binsize=1, fn=np.mean, coords=None):
     """

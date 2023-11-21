@@ -16,6 +16,8 @@ try:
     import cupy as cp
 except (ImportError,ModuleNotFoundError):
     cp = None
+else:
+    cp = None
 
 
 def orientation_plan(

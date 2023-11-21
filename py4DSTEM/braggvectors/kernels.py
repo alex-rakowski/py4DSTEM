@@ -2,6 +2,8 @@ try:
     import cupy as cp
 except Exception:
     pass
+else:
+    pass
 
 __all__ = ["kernels"]
 

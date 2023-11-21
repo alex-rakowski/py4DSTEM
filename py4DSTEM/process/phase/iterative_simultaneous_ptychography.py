@@ -16,6 +16,8 @@ try:
     import cupy as cp
 except (ImportError,ModuleNotFoundError,Exception):
     cp = np
+else:
+    cp = np
 
 from emdfile import Custom, tqdmnd
 from py4DSTEM import DataCube

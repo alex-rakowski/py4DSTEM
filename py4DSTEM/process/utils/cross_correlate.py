@@ -8,6 +8,8 @@ try:
     import cupy as cp
 except (ImportError,ModuleNotFoundError,Exception):
     cp = np
+else:
+    cp = np
 
 
 def get_cross_correlation(ar, template, corrPower=1, _returnval="real"):

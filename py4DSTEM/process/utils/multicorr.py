@@ -17,6 +17,8 @@ try:
     import cupy as cp
 except (ImportError,ModuleNotFoundError,Exception):
     cp = np
+else:
+    cp = np
 
 
 def upsampled_correlation(imageCorr, upsampleFactor, xyShift, device="cpu"):

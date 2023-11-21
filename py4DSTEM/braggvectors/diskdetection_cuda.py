@@ -10,6 +10,8 @@ try:
     import cupyx.scipy.fft as cufft
 except (Exception,ModuleNotFoundError,ImportError):
     pass
+else:
+    pass
 from time import time
 import numba
 

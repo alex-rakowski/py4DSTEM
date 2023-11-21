@@ -15,6 +15,8 @@ try:
     import cupy as cp
 except (ImportError,ModuleNotFoundError,Exception):
     cp = np
+else:
+    cp = np
 
 from emdfile import Array, Custom, Metadata, _read_metadata, tqdmnd
 from py4DSTEM.data import Calibration

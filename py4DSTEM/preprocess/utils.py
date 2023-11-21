@@ -7,7 +7,8 @@ try:
     import cupy as cp
 except (ImportError,ModuleNotFoundError,Exception):
     cp = np
-
+else:
+    pass
 
 def bin2D(array, factor, dtype=np.float64):
     """

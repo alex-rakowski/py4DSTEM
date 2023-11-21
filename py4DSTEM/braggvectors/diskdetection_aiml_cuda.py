@@ -19,6 +19,8 @@ try:
     import cupy as cp
 except (ImportError,ModuleNotFoundError,Exception):
     cp = np
+else:
+    cp = np
 
 try:
     import tensorflow as tf
@@ -31,6 +33,8 @@ except:
 try:
     from cupyx.scipy.ndimage import gaussian_filter
 except (ModuleNotFoundError,ImportError,Exception) as e:
+    pass
+else:
     pass
 
 def find_Bragg_disks_aiml_CUDA(

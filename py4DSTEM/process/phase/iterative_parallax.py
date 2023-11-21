@@ -26,6 +26,8 @@ try:
     import cupy as cp
 except (ImportError,ModuleNotFoundError,Exception):
     cp = np
+else:
+    cp = np
 
 warnings.simplefilter(action="always", category=UserWarning)
 

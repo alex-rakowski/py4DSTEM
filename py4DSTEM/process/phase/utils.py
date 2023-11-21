@@ -11,6 +11,9 @@ try:
 except (ImportError, ModuleNotFoundError,Exception):
     cp = None
     from scipy.fft import dstn, idstn
+else:
+    cp = None
+    from scipy.fft import dstn, idstn
 
 from py4DSTEM.process.utils import get_CoM
 from py4DSTEM.process.utils.cross_correlate import align_and_shift_images
