@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import numpy as np
 from scipy.special import expi
 
@@ -15,7 +17,7 @@ def compute_WK_factor(
     g: np.ndarray,
     Z: int,
     accelerating_voltage: float,
-    thermal_sigma: float = None,
+    thermal_sigma: float | None = None,
     include_core: bool = True,
     include_phonon: bool = True,
     verbose=False,

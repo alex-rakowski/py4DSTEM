@@ -1,12 +1,12 @@
 # Defines the VirtualDiffraction class, which stores 2D, diffraction-shaped data
 # with metadata about how it was created
+from __future__ import annotations
 
 from py4DSTEM.io.legacy.legacy13.v13_py4dstem_classes.diffractionslice import (
     DiffractionSlice,
 )
 from py4DSTEM.io.legacy.legacy13.v13_emd_classes.metadata import Metadata
 
-from typing import Optional, Union
 import numpy as np
 import h5py
 
@@ -20,11 +20,11 @@ class VirtualDiffraction(DiffractionSlice):
     def __init__(
         self,
         data: np.ndarray,
-        name: Optional[str] = "diffractionimage",
-        method: Optional[str] = None,
-        mode: Optional[str] = None,
-        geometry: Optional[Union[tuple, np.ndarray]] = None,
-        calibrated: Optional[bool] = False,
+        name: str | None = "diffractionimage",
+        method: str | None = None,
+        mode: str | None = None,
+        geometry: tuple | np.ndarray | None = None,
+        calibrated: bool | None = False,
         shift_center: bool = False,
     ):
         """

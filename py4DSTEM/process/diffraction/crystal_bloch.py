@@ -1,8 +1,9 @@
+from __future__ import annotations
+
 import warnings
 import numpy as np
 import numpy.lib.recfunctions as rfn
 from scipy import linalg
-from typing import Union, Optional, Dict, Tuple, List
 from time import time
 from tqdm import tqdm
 from dataclasses import dataclass
@@ -23,7 +24,7 @@ def calculate_dynamical_structure_factors(
     accelerating_voltage: float,
     method: str = "WK-CP",
     k_max: float = 2.0,
-    thermal_sigma: Optional[Union[float, dict]] = None,
+    thermal_sigma: float | dict | None = None,
     tol_structure_factor: float = 0.0,
     recompute_kinematic_structure_factors=True,
     g_vec_precision=None,
@@ -245,18 +246,18 @@ def calculate_dynamical_structure_factors(
 def generate_dynamical_diffraction_pattern(
     self,
     beams: PointList,
-    thickness: Union[float, list, tuple, np.ndarray],
-    zone_axis_lattice: np.ndarray = None,
-    zone_axis_cartesian: np.ndarray = None,
-    foil_normal_lattice: np.ndarray = None,
-    foil_normal_cartesian: np.ndarray = None,
+    thickness: float | list | tuple | np.ndarray,
+    zone_axis_lattice: np.ndarray | None = None,
+    zone_axis_cartesian: np.ndarray | None = None,
+    foil_normal_lattice: np.ndarray | None = None,
+    foil_normal_cartesian: np.ndarray | None = None,
     verbose: bool = False,
     always_return_list: bool = False,
-    dynamical_matrix_cache: Optional[DynamicalMatrixCache] = None,
+    dynamical_matrix_cache: DynamicalMatrixCache | None = None,
     return_complex: bool = False,
     return_eigenvectors: bool = False,
     return_Smatrix: bool = False,
-) -> Union[PointList, List[PointList]]:
+) -> PointList | list[PointList]:
     """
     Generate a dynamical diffraction pattern (or thickness series of patterns)
     using the Bloch wave method.
@@ -471,22 +472,22 @@ def generate_dynamical_diffraction_pattern(
 def generate_CBED(
     self,
     beams: PointList,
-    thickness: Union[float, list, tuple, np.ndarray],
+    thickness: float | list | tuple | np.ndarray,
     alpha_mrad: float,
     pixel_size_inv_A: float,
-    DP_size_inv_A: Optional[float] = None,
-    zone_axis_lattice: np.ndarray = None,
-    zone_axis_cartesian: np.ndarray = None,
-    foil_normal_lattice: np.ndarray = None,
-    foil_normal_cartesian: np.ndarray = None,
+    DP_size_inv_A: float | None = None,
+    zone_axis_lattice: np.ndarray | None = None,
+    zone_axis_cartesian: np.ndarray | None = None,
+    foil_normal_lattice: np.ndarray | None = None,
+    foil_normal_cartesian: np.ndarray | None = None,
     LACBED: bool = False,
     dtype: np.dtype = np.float32,
     verbose: bool = False,
     progress_bar: bool = True,
     return_mask: bool = False,
-    two_beam_zone_axis_lattice: np.ndarray = None,
+    two_beam_zone_axis_lattice: np.ndarray | None = None,
     return_probe: bool = False,
-) -> Union[np.ndarray, List[np.ndarray], Dict[Tuple[int], np.ndarray]]:
+) -> np.ndarray | list[np.ndarray] | dict[tuple[int], np.ndarray]:
     """
     Generate a dynamical CBED pattern using the Bloch wave method.
 

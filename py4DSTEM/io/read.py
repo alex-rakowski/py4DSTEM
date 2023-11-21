@@ -1,9 +1,9 @@
 # Reader for native files
+from __future__ import annotations
 
 import warnings
 from os.path import exists
 from pathlib import Path
-from typing import Optional, Union
 
 import emdfile as emd
 import py4DSTEM.io.legacy as legacy
@@ -12,10 +12,10 @@ from py4DSTEM.io.parsefiletype import _parse_filetype
 
 
 def read(
-    filepath: Union[str, Path],
-    datapath: Optional[str] = None,
-    tree: Optional[Union[bool, str]] = True,
-    verbose: Optional[bool] = False,
+    filepath: str | Path,
+    datapath: str | None = None,
+    tree: bool | str | None = True,
+    verbose: bool | None = False,
     **kwargs,
 ):
     """

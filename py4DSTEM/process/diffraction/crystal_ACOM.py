@@ -1,6 +1,7 @@
+from __future__ import annotations
+
 import numpy as np
 import matplotlib.pyplot as plt
-from typing import Union, Optional
 from tqdm import tqdm
 
 from emdfile import tqdmnd, PointList, PointListArray
@@ -22,8 +23,8 @@ def orientation_plan(
     self,
     zone_axis_range: np.ndarray = np.array([[0, 1, 1], [1, 1, 1]]),
     angle_step_zone_axis: float = 2.0,
-    angle_coarse_zone_axis: float = None,
-    angle_refine_range: float = None,
+    angle_coarse_zone_axis: float | None = None,
+    angle_refine_range: float | None = None,
     angle_step_in_plane: float = 2.0,
     accel_voltage: float = 300e3,
     corr_kernel_size: float = 0.08,
@@ -34,7 +35,7 @@ def orientation_plan(
     tol_distance: float = 0.01,
     fiber_axis=None,
     fiber_angles=None,
-    figsize: Union[list, tuple, np.ndarray] = (6, 6),
+    figsize: list | tuple | np.ndarray = (6, 6),
     CUDA: bool = False,
     progress_bar: bool = True,
 ):
@@ -798,12 +799,12 @@ def match_orientations(
     )
 
     # check cal state
-    if bragg_peaks_array.calstate["ellipse"] == False:
+    if bragg_peaks_array.calstate["ellipse"] is False:
         ellipse = False
         warn("Warning: bragg peaks not elliptically calibrated")
     else:
         ellipse = True
-    if bragg_peaks_array.calstate["rotate"] == False:
+    if bragg_peaks_array.calstate["rotate"] is False:
         rotate = False
         warn("bragg peaks not rotationally calibrated")
     else:
@@ -857,7 +858,7 @@ def match_single_pattern(
     plot_polar: bool = False,
     plot_corr: bool = False,
     returnfig: bool = False,
-    figsize: Union[list, tuple, np.ndarray] = (12, 4),
+    figsize: list | tuple | np.ndarray = (12, 4),
     verbose: bool = False,
     # plot_corr_3D: bool = False,
 ):
@@ -1840,7 +1841,9 @@ def cluster_grains(
             xr = np.clip(x + np.arange(-1, 2, dtype="int"), 0, sig.shape[0] - 1)
             yr = np.clip(y + np.arange(-1, 2, dtype="int"), 0, sig.shape[1] - 1)
             inds_cand = inds_all[xr[:, None], yr[None], :].ravel()
-            inds_cand = np.delete(inds_cand, mark.ravel()[inds_cand] == False)
+            inds_cand = np.delete(
+                inds_cand, mark.ravel()[inds_cand] == False  # noqa: E712
+            )
 
             if inds_cand.size == 0:
                 grow = False
@@ -1893,7 +1896,7 @@ def cluster_grains(
 
                 inds_grain = np.append(inds_grain, inds_cand[keep])
                 inds_cand = np.unique(
-                    np.delete(inds_new, mark.ravel()[inds_new] == False)
+                    np.delete(inds_new, mark.ravel()[inds_new] == False)  # noqa: E712
                 )
 
                 if inds_cand.size == 0:
@@ -2021,7 +2024,7 @@ def calculate_strain(
     sigma_excitation_error=0.02,
     tol_excitation_error_mult: float = 3,
     tol_intensity: float = 1e-4,
-    k_max: Optional[float] = None,
+    k_max: float | None = None,
     min_num_peaks=5,
     rotation_range=None,
     mask_from_corr=True,
@@ -2083,12 +2086,12 @@ def calculate_strain(
     radius_max_2 = corr_kernel_size**2
 
     # check cal state
-    if bragg_peaks_array.calstate["ellipse"] == False:
+    if bragg_peaks_array.calstate["ellipse"] is False:
         ellipse = False
         warn("bragg peaks not elliptically calibrated")
     else:
         ellipse = True
-    if bragg_peaks_array.calstate["rotate"] == False:
+    if bragg_peaks_array.calstate["rotate"] is False:
         rotate = False
         warn("bragg peaks not rotationally calibrated")
     else:

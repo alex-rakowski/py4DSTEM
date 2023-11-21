@@ -1,10 +1,11 @@
 # Defines the DataCube class, which stores 4D-STEM datacubes
+from __future__ import annotations
 
 from py4DSTEM.io.legacy.legacy13.v13_emd_classes.array import Array
 from py4DSTEM.io.legacy.legacy13.v13_py4dstem_classes.calibration import Calibration
 from py4DSTEM.io.legacy.legacy13.v13_py4dstem_classes.parenttree import ParentTree
 
-from typing import Optional, Union
+from typing import Optional
 import numpy as np
 import h5py
 
@@ -17,12 +18,12 @@ class DataCube(Array):
     def __init__(
         self,
         data: np.ndarray,
-        name: Optional[str] = "datacube",
-        R_pixel_size: Optional[Union[float, list]] = 1,
-        R_pixel_units: Optional[Union[str, list]] = "pixels",
-        Q_pixel_size: Optional[Union[float, list]] = 1,
-        Q_pixel_units: Optional[Union[str, list]] = "pixels",
-        slicelabels: Optional[Union[bool, list]] = None,
+        name: str | None = "datacube",
+        R_pixel_size: float | list | None = 1,
+        R_pixel_units: str | list | None = "pixels",
+        Q_pixel_size: float | list | None = 1,
+        Q_pixel_units: str | list | None = "pixels",
+        slicelabels: bool | list | None = None,
         calibration: Optional = None,
     ):
         """

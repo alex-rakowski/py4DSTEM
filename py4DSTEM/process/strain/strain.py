@@ -1,7 +1,7 @@
 # Defines the Strain class
+from __future__ import annotations
 
 import warnings
-from typing import Optional
 
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle
@@ -36,7 +36,7 @@ class StrainMap(RealSlice, Data):
 
     """
 
-    def __init__(self, braggvectors: BraggVectors, name: Optional[str] = "strainmap"):
+    def __init__(self, braggvectors: BraggVectors, name: str | None = "strainmap"):
         """
         Parameters
         ----------
@@ -84,7 +84,7 @@ class StrainMap(RealSlice, Data):
         # re-calibration are issued
         self.calstate = self.braggvectors.calstate
         assert self.calstate["center"], "braggvectors must be centered"
-        if self.calstate["rotate"] == False:
+        if self.calstate["rotate"] is False:
             warnings.warn(
                 ("Real to reciprocal space rotation not calibrated"),
                 UserWarning,
@@ -791,17 +791,20 @@ class StrainMap(RealSlice, Data):
 
         # Get images
         e_xx = np.ma.array(
-            self.get_slice("exx").data, mask=self.get_slice("mask").data == False
+            self.get_slice("exx").data,
+            mask=self.get_slice("mask").data == False,  # noqa: E712,E501
         )
         e_yy = np.ma.array(
-            self.get_slice("eyy").data, mask=self.get_slice("mask").data == False
+            self.get_slice("eyy").data,
+            mask=self.get_slice("mask").data == False,  # noqa: E712,E501
         )
         e_xy = np.ma.array(
-            self.get_slice("exy").data, mask=self.get_slice("mask").data == False
+            self.get_slice("exy").data,
+            mask=self.get_slice("mask").data == False,  # noqa: E712,E501
         )
         theta = np.ma.array(
             self.get_slice("theta").data,
-            mask=self.get_slice("mask").data == False,
+            mask=self.get_slice("mask").data == False,  # noqa: E712
         )
 
         ## Plot

@@ -1,4 +1,5 @@
 # Functions for creating flowline maps from diffraction spots
+from __future__ import annotations
 
 
 import numpy as np
@@ -15,8 +16,8 @@ from emdfile import tqdmnd, PointList, PointListArray
 
 
 def make_orientation_histogram(
-    bragg_peaks: PointListArray = None,
-    radial_ranges: np.ndarray = None,
+    bragg_peaks: PointListArray | None = None,
+    radial_ranges: np.ndarray | None = None,
     orientation_map=None,
     orientation_ind: int = 0,
     orientation_growth_angles: np.array = 0.0,

@@ -1,8 +1,8 @@
 # Functions for calibrating the pixel size in the diffraction plane.
+from __future__ import annotations
 
 import numpy as np
 from scipy.optimize import leastsq
-from typing import Union, Optional
 
 from emdfile import tqdmnd
 from py4DSTEM.process.utils import get_CoM
@@ -60,6 +60,6 @@ def get_dq_from_indexed_peaks(qs, hkl, a):
     # Get pixel size
     dq = 1 / (c * a)
     qs_fit = d_inv[mask] / a
-    hkl_fit = [hkl[i] for i in range(len(hkl)) if mask[i] == True]
+    hkl_fit = [hkl[i] for i in range(len(hkl)) if mask[i] == True]  # noqa: E712
 
     return dq, qs_fit, hkl_fit

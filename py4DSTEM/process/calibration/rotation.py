@@ -1,7 +1,7 @@
 # Rotational calibrations
+from __future__ import annotations
 
 import numpy as np
-from typing import Optional
 import matplotlib.pyplot as plt
 from py4DSTEM import show
 

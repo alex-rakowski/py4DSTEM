@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import h5py
 import hdf5plugin
 import numpy as np
@@ -10,8 +12,8 @@ def read_arina(
     scan_width=1,
     mem="RAM",
     binfactor: int = 1,
-    dtype_bin: float = None,
-    flatfield: np.ndarray = None,
+    dtype_bin: float | None = None,
+    flatfield: np.ndarray | None = None,
 ):
     """
     File reader for arina 4D-STEM datasets

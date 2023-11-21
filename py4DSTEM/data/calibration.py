@@ -1,8 +1,8 @@
 # Defines the Calibration class, which stores calibration metadata
+from __future__ import annotations
 
 import numpy as np
 from numbers import Number
-from typing import Optional
 from warnings import warn
 
 from emdfile import Metadata, Root
@@ -182,8 +182,8 @@ class Calibration(Metadata):
 
     def __init__(
         self,
-        name: Optional[str] = "calibration",
-        root: Optional[Root] = None,
+        name: str | None = "calibration",
+        root: Root | None = None,
     ):
         """
         Args:
@@ -234,7 +234,7 @@ class Calibration(Metadata):
         """
         from py4DSTEM.data import Data
 
-        assert isinstance(data, Data), f"data must be a Data instance"
+        assert isinstance(data, Data), "data must be a Data instance"
         self.root.attach(data)
 
     # Register for auto-calibration
@@ -316,7 +316,7 @@ class Calibration(Metadata):
             "pixels",
             "A^-1",
             "mrad",
-        ), f"Q pixel units must be 'A^-1', 'mrad' or 'pixels'."
+        ), "Q pixel units must be 'A^-1', 'mrad' or 'pixels'."
         self._params["Q_pixel_units"] = x
 
     def get_Q_pixel_units(self):

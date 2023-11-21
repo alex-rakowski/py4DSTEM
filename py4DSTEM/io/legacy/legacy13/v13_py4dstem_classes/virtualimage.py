@@ -1,10 +1,10 @@
 # Defines the VirtualImage class, which stores 2D, real-shaped data
 # with metadata about how it was created
+from __future__ import annotations
 
 from py4DSTEM.io.legacy.legacy13.v13_py4dstem_classes.realslice import RealSlice
 from py4DSTEM.io.legacy.legacy13.v13_emd_classes.metadata import Metadata
 
-from typing import Optional, Union
 import numpy as np
 import h5py
 
@@ -18,13 +18,13 @@ class VirtualImage(RealSlice):
     def __init__(
         self,
         data: np.ndarray,
-        name: Optional[str] = "virtualimage",
-        mode: Optional[str] = None,
-        geometry: Optional[Union[tuple, np.ndarray]] = None,
-        centered: Optional[bool] = False,
-        calibrated: Optional[bool] = False,
-        shift_center: Optional[bool] = False,
-        dask: Optional[bool] = False,
+        name: str | None = "virtualimage",
+        mode: str | None = None,
+        geometry: tuple | np.ndarray | None = None,
+        centered: bool | None = False,
+        calibrated: bool | None = False,
+        shift_center: bool | None = False,
+        dask: bool | None = False,
     ):
         """
         Args:

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.axes import Axes
@@ -10,7 +12,6 @@ from skimage.morphology import dilation, erosion
 
 import warnings
 import numpy as np
-from typing import Union, Optional
 
 from emdfile import tqdmnd, PointList, PointListArray
 from py4DSTEM.process.diffraction.utils import calc_1D_profile
@@ -18,18 +19,18 @@ from py4DSTEM.process.diffraction.utils import calc_1D_profile
 
 def plot_structure(
     self,
-    orientation_matrix: Optional[np.ndarray] = None,
-    zone_axis_lattice: Optional[np.ndarray] = None,
-    proj_x_lattice: Optional[np.ndarray] = None,
-    zone_axis_cartesian: Optional[np.ndarray] = None,
-    proj_x_cartesian: Optional[np.ndarray] = None,
+    orientation_matrix: np.ndarray | None = None,
+    zone_axis_lattice: np.ndarray | None = None,
+    proj_x_lattice: np.ndarray | None = None,
+    zone_axis_cartesian: np.ndarray | None = None,
+    proj_x_cartesian: np.ndarray | None = None,
     size_marker: float = 400,
     tol_distance: float = 0.001,
-    plot_limit: Optional[np.ndarray] = None,
-    camera_dist: Optional[float] = None,
+    plot_limit: np.ndarray | None = None,
+    camera_dist: float | None = None,
     show_axes: bool = False,
     perspective_axes: bool = True,
-    figsize: Union[tuple, list, np.ndarray] = (8, 8),
+    figsize: tuple | list | np.ndarray = (8, 8),
     returnfig: bool = False,
 ):
     """
@@ -186,17 +187,17 @@ def plot_structure(
 
 def plot_structure_factors(
     self,
-    orientation_matrix: Optional[np.ndarray] = None,
-    zone_axis_lattice: Optional[np.ndarray] = None,
-    proj_x_lattice: Optional[np.ndarray] = None,
-    zone_axis_cartesian: Optional[np.ndarray] = None,
-    proj_x_cartesian: Optional[np.ndarray] = None,
+    orientation_matrix: np.ndarray | None = None,
+    zone_axis_lattice: np.ndarray | None = None,
+    proj_x_lattice: np.ndarray | None = None,
+    zone_axis_cartesian: np.ndarray | None = None,
+    proj_x_cartesian: np.ndarray | None = None,
     scale_markers: float = 1e3,
-    plot_limit: Optional[Union[list, tuple, np.ndarray]] = None,
-    camera_dist: Optional[float] = None,
+    plot_limit: list | tuple | np.ndarray | None = None,
+    camera_dist: float | None = None,
     show_axes: bool = True,
     perspective_axes: bool = True,
-    figsize: Union[list, tuple, np.ndarray] = (8, 8),
+    figsize: list | tuple | np.ndarray = (8, 8),
     returnfig: bool = False,
 ):
     """
@@ -298,7 +299,7 @@ def plot_scattering_intensity(
     bragg_k_power=0.0,
     bragg_intensity_power=1.0,
     bragg_k_broadening=0.005,
-    figsize: Union[list, tuple, np.ndarray] = (10, 4),
+    figsize: list | tuple | np.ndarray = (10, 4),
     returnfig: bool = False,
 ):
     """
@@ -432,13 +433,13 @@ def plot_scattering_intensity(
 
 def plot_orientation_zones(
     self,
-    azim_elev: Optional[Union[list, tuple, np.ndarray]] = None,
-    proj_dir_lattice: Optional[Union[list, tuple, np.ndarray]] = None,
-    proj_dir_cartesian: Optional[Union[list, tuple, np.ndarray]] = None,
+    azim_elev: list | tuple | np.ndarray | None = None,
+    proj_dir_lattice: list | tuple | np.ndarray | None = None,
+    proj_dir_cartesian: list | tuple | np.ndarray | None = None,
     tol_den=10,
     marker_size: float = 20,
-    plot_limit: Union[list, tuple, np.ndarray] = np.array([-1.1, 1.1]),
-    figsize: Union[list, tuple, np.ndarray] = (8, 8),
+    plot_limit: list | tuple | np.ndarray = np.array([-1.1, 1.1]),
+    figsize: list | tuple | np.ndarray = (8, 8),
     returnfig: bool = False,
 ):
     """
@@ -519,7 +520,7 @@ def plot_orientation_zones(
     # x = r * np.sin(theta)
     # y = r * np.cos(theta)
 
-    warnings.filterwarnings("ignore", module="matplotlib\..*")
+    warnings.filterwarnings("ignore", module=r"matplotlib\..*")
     line_params = {"linewidth": 2, "alpha": 0.1, "c": "k"}
     for phi in np.arange(0, 180, 5):
         ax.plot3D(
@@ -694,9 +695,9 @@ def plot_orientation_zones(
 def plot_orientation_plan(
     self,
     index_plot: int = 0,
-    zone_axis_lattice: Optional[np.ndarray] = None,
-    zone_axis_cartesian: Optional[np.ndarray] = None,
-    figsize: Union[list, tuple, np.ndarray] = (14, 6),
+    zone_axis_lattice: np.ndarray | None = None,
+    zone_axis_cartesian: np.ndarray | None = None,
+    figsize: list | tuple | np.ndarray = (14, 6),
     returnfig: bool = False,
 ):
     """
@@ -842,17 +843,17 @@ def plot_orientation_plan(
 
 def plot_diffraction_pattern(
     bragg_peaks: PointList,
-    bragg_peaks_compare: PointList = None,
+    bragg_peaks_compare: PointList | None = None,
     scale_markers: float = 500,
-    scale_markers_compare: Optional[float] = None,
+    scale_markers_compare: float | None = None,
     power_markers: float = 1,
-    plot_range_kx_ky: Optional[Union[list, tuple, np.ndarray]] = None,
+    plot_range_kx_ky: list | tuple | np.ndarray | None = None,
     add_labels: bool = True,
     shift_labels: float = 0.08,
     shift_marker: float = 0.005,
     min_marker_size: float = 1e-6,
     max_marker_size: float = 1000,
-    figsize: Union[list, tuple, np.ndarray] = (12, 6),
+    figsize: list | tuple | np.ndarray = (12, 6),
     returnfig: bool = False,
     input_fig_handle=None,
 ):
@@ -996,9 +997,9 @@ def plot_orientation_maps(
     dir_in_plane_degrees: float = 0.0,
     corr_range: np.ndarray = np.array([0, 5]),
     corr_normalize: bool = True,
-    scale_legend: bool = None,
-    figsize: Union[list, tuple, np.ndarray] = (16, 5),
-    figbound: Union[list, tuple, np.ndarray] = (0.01, 0.005),
+    scale_legend: bool | None = None,
+    figsize: list | tuple | np.ndarray = (16, 5),
+    figbound: list | tuple | np.ndarray = (0.01, 0.005),
     show_axes: bool = True,
     camera_dist=None,
     plot_limit=None,
@@ -1491,17 +1492,17 @@ def plot_fiber_orientation_maps(
     self,
     orientation_map,
     orientation_ind: int = 0,
-    symmetry_order: int = None,
+    symmetry_order: int | None = None,
     symmetry_mirror: bool = False,
     dir_in_plane_degrees: float = 0.0,
     corr_range: np.ndarray = np.array([0, 2]),
     corr_normalize: bool = True,
     show_axes: bool = True,
-    medfilt_size: int = None,
+    medfilt_size: int | None = None,
     cmap_out_of_plane: str = "plasma",
     leg_size: int = 200,
-    figsize: Union[list, tuple, np.ndarray] = (12, 8),
-    figbound: Union[list, tuple, np.ndarray] = (0.005, 0.04),
+    figsize: list | tuple | np.ndarray = (12, 8),
+    figbound: list | tuple | np.ndarray = (0.005, 0.04),
     returnfig: bool = False,
 ):
     """
@@ -1704,11 +1705,11 @@ def plot_fiber_orientation_maps(
             np.round(leg_size * 1.0),
         ]
         labels = [
-            str(np.round(self.orientation_fiber_angles[0] * 0.00)) + "$\degree$",
-            str(np.round(self.orientation_fiber_angles[0] * 0.25)) + "$\degree$",
-            str(np.round(self.orientation_fiber_angles[0] * 0.50)) + "$\degree$",
-            str(np.round(self.orientation_fiber_angles[0] * 0.75)) + "$\degree$",
-            str(np.round(self.orientation_fiber_angles[0] * 1.00)) + "$\degree$",
+            str(np.round(self.orientation_fiber_angles[0] * 0.00)) + "$\\degree$",
+            str(np.round(self.orientation_fiber_angles[0] * 0.25)) + "$\\degree$",
+            str(np.round(self.orientation_fiber_angles[0] * 0.50)) + "$\\degree$",
+            str(np.round(self.orientation_fiber_angles[0] * 0.75)) + "$\\degree$",
+            str(np.round(self.orientation_fiber_angles[0] * 1.00)) + "$\\degree$",
         ]
         ax_op_l.set_xticks(ticks)
         ax_op_l.set_xticklabels(labels)
@@ -2120,7 +2121,7 @@ def plot_ring_pattern(
         ax = ax_parent[0]
 
     for a1 in range(radii.shape[0]):
-        if intensity_constant == True:
+        if intensity_constant is True:
             ax.plot(
                 radii[a1] * np.sin(theta),
                 radii[a1] * np.cos(theta),

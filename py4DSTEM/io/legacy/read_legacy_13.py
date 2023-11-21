@@ -1,10 +1,10 @@
 # File reader for py4DSTEM v13 files
+from __future__ import annotations
 
 import h5py
 import numpy as np
 import warnings
 from os.path import exists, basename, dirname, join
-from typing import Optional, Union
 
 from py4DSTEM.io.legacy.read_utils import is_py4DSTEM_version13
 from py4DSTEM.io.legacy.legacy13 import (
@@ -24,8 +24,8 @@ from py4DSTEM.io.legacy.legacy13 import v13_to_14
 
 def read_legacy13(
     filepath,
-    root: Optional[str] = None,
-    tree: Optional[Union[bool, str]] = True,
+    root: str | None = None,
+    tree: bool | str | None = True,
 ):
     """
     File reader for legacy py4DSTEM (v=0.13.x) formated HDF5 files.

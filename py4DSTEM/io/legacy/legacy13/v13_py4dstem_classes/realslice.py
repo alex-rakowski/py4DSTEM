@@ -1,6 +1,7 @@
+from __future__ import annotations
+
 from py4DSTEM.io.legacy.legacy13.v13_emd_classes.array import Array
 
-from typing import Optional, Union
 import numpy as np
 import h5py
 
@@ -13,10 +14,10 @@ class RealSlice(Array):
     def __init__(
         self,
         data: np.ndarray,
-        name: Optional[str] = "realslice",
-        pixel_size: Optional[Union[float, list]] = 1,
-        pixel_units: Optional[Union[str, list]] = "pixels",
-        slicelabels: Optional[Union[bool, list]] = None,
+        name: str | None = "realslice",
+        pixel_size: float | list | None = 1,
+        pixel_units: str | list | None = "pixels",
+        slicelabels: bool | list | None = None,
     ):
         """
         Accepts:

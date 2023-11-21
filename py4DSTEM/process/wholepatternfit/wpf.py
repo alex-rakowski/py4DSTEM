@@ -8,7 +8,6 @@ from py4DSTEM.process.wholepatternfit.wp_models import (
     Parameter,
 )
 
-from typing import Optional
 import numpy as np
 
 from scipy.optimize import least_squares
@@ -29,11 +28,11 @@ class WholePatternFit:
     def __init__(
         self,
         datacube: DataCube,
-        x0: Optional[float] = None,
-        y0: Optional[float] = None,
-        mask: Optional[np.ndarray] = None,
+        x0: float | None = None,
+        y0: float | None = None,
+        mask: np.ndarray | None = None,
         use_jacobian: bool = True,
-        meanCBED: Optional[np.ndarray] = None,
+        meanCBED: np.ndarray | None = None,
     ):
         """
         Perform pixelwise fits using composable models and numerical optimization.
@@ -300,10 +299,10 @@ class WholePatternFit:
     def fit_all_patterns(
         self,
         resume: bool = False,
-        real_space_mask: Optional[np.ndarray] = None,
+        real_space_mask: np.ndarray | None = None,
         show_fit_metrics: bool = True,
         distributed: bool = True,
-        num_jobs: int = None,
+        num_jobs: int | None = None,
         threads_per_job: int = 1,
         **fit_opts,
     ):

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import numpy as np
 import matplotlib.pyplot as plt
 import h5py
@@ -95,7 +97,7 @@ def beta_parallel_disk_detection(
     # qymax=None,
     probe_type="FT",
     dask_client=None,
-    dask_client_params: dict = None,
+    dask_client_params: dict | None = None,
     restart_dask_client=True,
     close_dask_client=False,
     return_dask_client=True,
@@ -137,8 +139,8 @@ def beta_parallel_disk_detection(
     #   ... dask stuff.
     # TODO add assert statements and other checks. Think about reordering opperations
 
-    if dask_client == None:
-        if dask_client_params != None:
+    if dask_client is None:
+        if dask_client_params is not None:
             dask.config.set(
                 {
                     "distributed.worker.memory.spill": False,
@@ -201,7 +203,7 @@ def beta_parallel_disk_detection(
         dask_data = da.from_array(
             dataset.data, chunks=(1, 1, dataset.Q_Nx, dataset.Q_Ny)
         )
-    elif dataset.stack_pointer != None:
+    elif dataset.stack_pointer is not None:
         dask_data = da.from_array(
             dataset.stack_pointer, chunks=(1, 1, dataset.Q_Nx, dataset.Q_Ny)
         )
@@ -261,9 +263,9 @@ def beta_parallel_disk_detection(
     if close_dask_client:
         dask_client.close()
         return peaks
-    elif close_dask_client == False and return_dask_client == True:
+    elif close_dask_client is False and return_dask_client is True:
         return peaks, dask_client
-    elif close_dask_client and return_dask_client == False:
+    elif close_dask_client and return_dask_client is False:
         return peaks
     else:
         print(

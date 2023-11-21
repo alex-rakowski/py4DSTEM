@@ -1,11 +1,11 @@
 # Defines a class, PointList, for storing / accessing / manipulating data
 # in the form of lists of vectors in named dimensions.  Wraps numpy
 # structured arrays.
+from __future__ import annotations
 
 import numpy as np
 import h5py
 from copy import copy
-from typing import Optional
 
 from py4DSTEM.io.legacy.legacy13.v13_emd_classes.tree import Tree
 from py4DSTEM.io.legacy.legacy13.v13_emd_classes.metadata import Metadata
@@ -20,7 +20,7 @@ class PointList:
     def __init__(
         self,
         data: np.ndarray,
-        name: Optional[str] = "pointlist",
+        name: str | None = "pointlist",
     ):
         """
                 Instantiate a PointList.

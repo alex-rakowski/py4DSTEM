@@ -1,8 +1,8 @@
 # Defines the QPoints class, which stores PointLists with fields 'qx','qy','intensity'
+from __future__ import annotations
 
 from py4DSTEM.io.legacy.legacy13.v13_emd_classes.pointlist import PointList
 
-from typing import Optional, Union
 import numpy as np
 import h5py
 
@@ -16,7 +16,7 @@ class QPoints(PointList):
     def __init__(
         self,
         data: np.ndarray,
-        name: Optional[str] = "qpoints",
+        name: str | None = "qpoints",
     ):
         """
         Accepts:

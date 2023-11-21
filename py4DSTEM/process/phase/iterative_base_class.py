@@ -1,6 +1,7 @@
 """
 Module for reconstructing phase objects from 4DSTEM datasets using iterative methods.
 """
+from __future__ import annotations
 
 import warnings
 
@@ -60,7 +61,9 @@ class PhaseReconstruction(Custom):
         self._datacube = datacube
         return self
 
-    def reinitialize_parameters(self, device: str = None, verbose: bool = None):
+    def reinitialize_parameters(
+        self, device: str | None = None, verbose: bool | None = None
+    ):
         """
         Reinitializes common parameters. This is useful when loading a previously-saved
         reconstruction (which set device='cpu' and verbose=True for compatibility) ,
@@ -275,9 +278,9 @@ class PhaseReconstruction(Custom):
         self,
         datacube: DataCube,
         require_calibrations: bool = False,
-        force_scan_sampling: float = None,
-        force_angular_sampling: float = None,
-        force_reciprocal_sampling: float = None,
+        force_scan_sampling: float | None = None,
+        force_angular_sampling: float | None = None,
+        force_reciprocal_sampling: float | None = None,
     ):
         """
         Method to extract intensities and calibrations from datacube.
@@ -463,10 +466,10 @@ class PhaseReconstruction(Custom):
     def _calculate_intensities_center_of_mass(
         self,
         intensities: np.ndarray,
-        dp_mask: np.ndarray = None,
+        dp_mask: np.ndarray | None = None,
         fit_function: str = "plane",
-        com_shifts: np.ndarray = None,
-        com_measured: np.ndarray = None,
+        com_shifts: np.ndarray | None = None,
+        com_measured: np.ndarray | None = None,
     ):
         """
         Common preprocessing function to compute and fit diffraction intensities CoM
@@ -578,8 +581,8 @@ class PhaseReconstruction(Custom):
         plot_rotation: bool = True,
         plot_center_of_mass: str = "default",
         maximize_divergence: bool = False,
-        force_com_rotation: float = None,
-        force_com_transpose: bool = None,
+        force_com_rotation: float | None = None,
+        force_com_transpose: bool | None = None,
         **kwargs,
     ):
         """
