@@ -8,7 +8,7 @@ try:
     from cupyx.scipy.ndimage import gaussian_filter
     import cupy as cp
     import cupyx.scipy.fft as cufft
-except Exception:
+except (Exception,ModuleNotFoundError,ImportError):
     pass
 from time import time
 import numba
