@@ -5,7 +5,7 @@ Functions for finding Braggdisks using cupy
 import sys
 import numpy as np
 IN_COLAB = 'google.colab' in sys.modules
-if IN_COLAB:
+if IN_COLAB is False:
     try:
         from cupyx.scipy.ndimage import gaussian_filter
         import cupy as cp
