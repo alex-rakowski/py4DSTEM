@@ -102,5 +102,6 @@ if IN_COLAB is False:
 
         kernels["edge_boundary"] = cp.RawKernel(edge_boundary, "edge_boundary")
     except Exception:
+        __all__ = ["kernels"]
         kernels = {}
         pass
