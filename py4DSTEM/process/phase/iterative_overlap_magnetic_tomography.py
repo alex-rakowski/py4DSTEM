@@ -19,10 +19,16 @@ IN_COLAB = 'google.colab' in sys.modules
 if IN_COLAB is False:
     try:
         import cupy as cp
-        import pylops
     except (ImportError,ModuleNotFoundError,Exception):
         cp = np
-
+else:
+    # I need to set some envrionment variables so pylops doesnt try to load cupy
+    import os   
+    os.environ["CUPY_PYLOPS"] = "0"
+    #CUSIGNAL_PYLOPS
+    os.environ["CUSIGNAL_PYLOPS"] = "0"
+    
+import pylops
 from emdfile import Custom, tqdmnd
 from py4DSTEM import DataCube
 from py4DSTEM.process.phase.iterative_base_class import PtychographicReconstruction

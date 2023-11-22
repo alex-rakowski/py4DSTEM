@@ -12,8 +12,13 @@ from py4DSTEM.process.phase.utils import (
 from py4DSTEM.process.utils import get_CoM
 import sys
 IN_COLAB = 'google.colab' in sys.modules
-if IN_COLAB is False:
-    import pylops
+if IN_COLAB is True:
+    import os
+    # I need to set some envrionment variables so pylops doesnt try to load cupy
+    os.environ["CUPY_PYLOPS"] = "0"
+    #CUSIGNAL_PYLOPS
+    os.environ["CUSIGNAL_PYLOPS"] = "0"
+import pylops
 
 
 class PtychographicConstraints:
