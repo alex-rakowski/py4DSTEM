@@ -8,7 +8,7 @@ from typing import Mapping, Sequence, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
-import pylops
+# import pylops
 from matplotlib.gridspec import GridSpec
 from mpl_toolkits.axes_grid1 import ImageGrid, make_axes_locatable
 from py4DSTEM.visualize import show
