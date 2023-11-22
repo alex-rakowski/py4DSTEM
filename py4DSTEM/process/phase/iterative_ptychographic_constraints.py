@@ -1,7 +1,7 @@
 import warnings
 
 import numpy as np
-import pylops
+# import pylops
 from py4DSTEM.process.phase.utils import (
     array_slice,
     estimate_global_transformation_ransac,
@@ -10,6 +10,10 @@ from py4DSTEM.process.phase.utils import (
     regularize_probe_amplitude,
 )
 from py4DSTEM.process.utils import get_CoM
+import sys
+IN_COLAB = 'google.colab' in sys.modules
+if IN_COLAB is False:
+    import pylops
 
 
 class PtychographicConstraints:

@@ -8,7 +8,7 @@ from typing import Mapping, Sequence, Tuple, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
-import pylops
+# import pylops
 from matplotlib.gridspec import GridSpec
 from mpl_toolkits.axes_grid1 import ImageGrid, make_axes_locatable
 from py4DSTEM.visualize.vis_special import Complex2RGB, add_colorbar_arg, show_complex
@@ -19,6 +19,7 @@ IN_COLAB = 'google.colab' in sys.modules
 if IN_COLAB is False:
     try:
         import cupy as cp
+        import pylops
     except (ImportError,ModuleNotFoundError,Exception):
         cp = np
 
