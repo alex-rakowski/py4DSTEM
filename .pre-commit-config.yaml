@@ -6,6 +6,19 @@ repos:
       - id: black
         language_version: python3.9
   - repo: https://github.com/pycqa/flake8
-    rev: '6.1.0'  
+    rev: '6.1.0'
     hooks:
       - id: flake8
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+    -   id: check-yaml
+    # -   id: end-of-file-fixer
+    # -   id: trailing-whitespace
+    -   id: check-toml
+  # -   repo: https://github.com/alex-rakowski/no_implicit_optional
+  #     # rev: 0.1.5 # from tagged version
+  #     # rev: 8147e918d73b2c26280e40fdb0106011daad91de # from a particular commit
+  #     rev: pre-commit-hook # from a branch - not a good way to do this better to use tag as it doesn't get updated
+  #     hooks:
+  #     -   id: no_implicit_optional_checker
