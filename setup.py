@@ -47,9 +47,9 @@ setup(
         "ipyparallel": ["ipyparallel >= 6.2.4", "dill >= 0.3.3"],
         "cuda": ["cupy >= 10.0.0"],
         "acom": ["pymatgen >= 2022", "mp-api == 0.24.1"],
-        "aiml": ["tensorflow == 2.4.1", "tensorflow-addons <= 0.14.0", "crystal4D"],
+        "aiml": ["tensorflow == 2.15.0.post1", "tensorflow-addons <= 0.14.0", "crystal4D"],
         "aiml-cuda": [
-            "tensorflow == 2.4.1",
+            "tensorflow == 2.15.0.post1",
             "tensorflow-addons <= 0.14.0",
             "crystal4D",
             "cupy >= 10.0.0",
