@@ -12,8 +12,8 @@ updates:
       day: "sunday"
       time: "23:00"
     ignore:
-      - tensorflow
-      - tensorflow-addons
+      - dependency-name: "tensorflow"
+      - dependency-name: "tensorflow-addons"
       
   - package-ecosystem: "github-actions"
     directory: "/"
